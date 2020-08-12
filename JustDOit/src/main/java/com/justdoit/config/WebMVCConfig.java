@@ -12,5 +12,9 @@ public class WebMVCConfig extends WebMvcConfigurerAdapter {
     public BCryptPasswordEncoder passwordEncoder() {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         return bCryptPasswordEncoder;
+        // spring will place this bCryptPasswordEncoder object in what;s the Application Context (registry of beans and other things)
+        // then, anywhere we @Autowire, spring can inject no problem
     }
+
+    // TODO: Isadora to get sqlSessionFactory bean here
 }

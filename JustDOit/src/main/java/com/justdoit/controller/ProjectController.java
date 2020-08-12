@@ -3,6 +3,7 @@ package com.justdoit.controller;
 import com.justdoit.POJOs.Project;
 import com.justdoit.POJOs.ProjectSummary;
 import com.justdoit.POJOs.ResponseObject;
+import com.justdoit.exceptions.CustomTaskException;
 import com.justdoit.service.ProjectService;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +30,13 @@ public class ProjectController {
     // works
     @GetMapping("/{projectId}")
     // return project info, e.g. name, deadline, etc
-    public ResponseObject<Project> viewProject(@PathVariable(value="projectId")int projectId) {
+    public ResponseObject<Project> viewProject(@PathVariable(value="projectId")int projectId) throws CustomTaskException {
         ResponseObject<Project> res = new ResponseObject();
-        res.setData(projectService.listByProjectId(projectId));
+        try {
+            res.setData(projectService.listByProjectId(projectId));
+        } catch(Exception e){
+            throw new CustomTaskException(e.getMessage());
+        }
         return res;
     }
 
