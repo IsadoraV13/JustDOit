@@ -1,6 +1,7 @@
 package com.justdoit.POJOs;
 
 import javax.persistence.*;
+import java.util.Date;
 
 
 // a project has 0 or more tasks
@@ -19,16 +20,51 @@ public class Project {
     private int projectId;
     private String projectName;
     private int projectOwnerUserId;
-    private String projectDeadline;
+    @Temporal(TemporalType.DATE)
+    private Date projectDeadline;
     @Column(columnDefinition = "boolean default 0")
     private Boolean isArchived;
-
-
-
 
     public Project() {
     }
 
+    public int getProjectId() {
+        return projectId;
+    }
 
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
+    }
 
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public int getProjectOwnerUserId() {
+        return projectOwnerUserId;
+    }
+
+    public void setProjectOwnerUserId(int projectOwnerUserId) {
+        this.projectOwnerUserId = projectOwnerUserId;
+    }
+
+    public Date getProjectDeadline() {
+        return projectDeadline;
+    }
+
+    public void setProjectDeadline(Date projectDeadline) {
+        this.projectDeadline = projectDeadline;
+    }
+
+    public Boolean getArchived() {
+        return isArchived;
+    }
+
+    public void setArchived(Boolean archived) {
+        isArchived = archived;
+    }
 }

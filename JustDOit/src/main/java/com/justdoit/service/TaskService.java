@@ -1,16 +1,13 @@
 package com.justdoit.service;
 
-import com.justdoit.POJOs.Project;
 import com.justdoit.POJOs.Task;
-import com.justdoit.POJOs.User;
+import com.justdoit.POJOs.TaskPreview;
 import com.justdoit.repositories.ProjectRepository;
 import com.justdoit.repositories.TaskRepository;
-import com.justdoit.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 
@@ -21,38 +18,57 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepo;
     @Autowired
-    private UserRepository userRepo;
-    @Autowired
     private ProjectRepository projectRepo;
     @Autowired
     private UserService userService;
 
+    // admin only
     public List<Task> listAllTasks() {
         return taskRepo.findAll();
     }
 
-    public Task saveTask(Task newTask, int TOId, int projectId) {
-        User taskOwner = userRepo.getOne(TOId);
-        Project project = projectRepo.getOne(projectId);
-        List<Task> tasks = new ArrayList<>();
-        tasks.add(newTask);
-        taskOwner.setUserTask(new HashSet<Task>(tasks));
+    // used once user clicks on a particular TaskPreview to view or update
+    public Task listByTaskId(int taskId) {
+        return taskRepo.findOne(taskId);
+    }
 
+    public List<Task> listTaskByProjectId(int projectId) {
+        return taskRepo.findTasksByProjectId(projectId);
+    }
+
+    public Task saveTask(Task newTask) {
         return taskRepo.save(newTask);
     }
 
-    public List<Task> listTasksByUserId(int userId) {
-    // userId of logged in user is already available as a parameter in the URL (via the hidden html element)
-        User user = userService.listUserById(userId);
-        return new ArrayList<Task>(user.getUserTask());
+//    public int listMainProjectId(int userId) {
+//        int projectId = 0;
+//        // find user's list of projects
+//        List<Project> projects = projectRepo.findProjectIdByUserId(userId);
+//        // then find Main project and its tasks
+//        for (Project project : projects) {
+//            if (project.getIsMainProject() == true)
+//                projectId = project.getProjectId();
+//        }
+//        return projectId;
+//    }
+
+    public List<TaskPreview> listTaskPreviews(int projectId) {
+        List<TaskPreview> taskPreviews = new ArrayList<>();
+        List<Task> tasks = listTaskByProjectId(projectId);
+        for (Task task : tasks) {
+            // for each task, create a new TaskPreview object and set its attributes based on that task
+            TaskPreview tp = new TaskPreview();
+            tp.setTaskDescription(task.getTaskDescription());
+            tp.setTaskDeadline(task.getTaskDeadline());
+            tp.setTaskOwner(taskRepo.findTaskOwnerNameByTaskOwnerUserId(task.getTaskOwnerUserId()));
+            tp.setTaskPriority(task.getTaskPriority());
+            taskPreviews.add(tp);
+        }
+        return taskPreviews;
     }
 
-    public Task listByTaskId(int chatId) {
-        return taskRepo.findByTaskId(chatId);
-    }
-
-    public void deleteTask(int chatId) {
-        taskRepo.deleteByTaskId(chatId);
+    public void deleteTask(int taskId) {
+        taskRepo.deleteByTaskId(taskId);
     }
 
 

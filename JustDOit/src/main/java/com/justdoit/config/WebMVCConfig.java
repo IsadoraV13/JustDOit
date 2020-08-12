@@ -1,4 +1,4 @@
-package com.muttsApp.config;
+package com.justdoit.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

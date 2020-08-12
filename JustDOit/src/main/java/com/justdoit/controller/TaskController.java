@@ -2,6 +2,7 @@ package com.justdoit.controller;
 
 import com.justdoit.POJOs.ResponseObject;
 import com.justdoit.POJOs.Task;
+import com.justdoit.POJOs.TaskPreview;
 import com.justdoit.service.TaskService;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,24 +18,41 @@ public class TaskController {
     private TaskService taskService;
 
     @GetMapping
-    public ResponseObject<List<Task>> ViewAllChats() {
+    // This should be an admin function
+    public ResponseObject<List<Task>> viewAllTasks() {
         ResponseObject<List<Task>> res = new ResponseObject();
         res.setData(taskService.listAllTasks());
         return res;
     }
 
-
-
-    @PostMapping("/{taskId}/task")
-    public ResponseObject<Task> createMessage(@RequestBody Task task) {
+    // works
+    @GetMapping("/{taskId}")
+    // return task info, e.g. description, deadline, etc
+    public ResponseObject<Task> viewTask(@PathVariable(value="taskId")int taskId) {
         ResponseObject<Task> res = new ResponseObject();
-        res.setData(taskService.saveTask(task));
+        res.setData(taskService.listByTaskId(taskId));
         return res;
     }
 
+    // works
+    @GetMapping("/{projectId}/taskpreviews")
+    // return all task info related to this projectId
+    public ResponseObject<List<TaskPreview>> viewTaskPreviewsByProjectId(@PathVariable(value="projectId")int projectId) {
+        ResponseObject<List<TaskPreview>> res = new ResponseObject<>();
+        res.setData(taskService.listTaskPreviews(projectId));
+        return res;
+    }
+
+    @PostMapping
+    // create/save new task
+    public ResponseObject<Task> createTask(@RequestBody Task newTask) {
+        ResponseObject<Task> res = new ResponseObject();
+        res.setData(taskService.saveTask(newTask));
+        return res;
+    }
 
     @DeleteMapping("/{taskId}")
-    public void deleteChat(@PathVariable(value="taskId")int taskId) throws ObjectNotFoundException {
+    public void deleteTask(@PathVariable(value="taskId")int taskId) throws ObjectNotFoundException {
         taskService.deleteTask(taskId);
     }
 

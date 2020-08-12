@@ -1,17 +1,11 @@
 package com.justdoit.controller;
 
 
-import com.justdoit.POJOs.Project;
-import com.justdoit.POJOs.ResponseObject;
-import com.justdoit.POJOs.Task;
-import com.justdoit.POJOs.User;
+import com.justdoit.POJOs.*;
 import com.justdoit.service.TaskService;
 import com.justdoit.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,44 +19,57 @@ public class UserController {
     @Autowired
     private TaskService taskService;
 
-    // at first (when we don't have contacts, every user can see this - but then only the admin should see this)
+    // works
     @GetMapping
-    public ResponseObject<List<User>> ViewAllUsers() {
+    // This should be an admin function
+    public ResponseObject<List<User>> viewAllUsers() {
         ResponseObject<List<User>> res = new ResponseObject();
         res.setData(userService.listAllUsers());
         return res;
     }
 
+    // works
     @GetMapping(value="{userId}")
-    public ResponseObject<User> ViewUser(@PathVariable(name = "userId") int userId){
+    // return user info, e.g. name, email, etc
+    public ResponseObject<User> viewUser(@PathVariable(name = "userId") int userId){
             ResponseObject<User> res = new ResponseObject();
         res.setData(userService.listUserById(userId));
         return res;
     }
 
+    // works
     @GetMapping("/{userId}/tasks")
-    // this should return all tasks associated with this user
-    public ResponseObject<List<Task>> viewUserChats(@PathVariable(name = "userId") int userId) {
+    // return all tasks associated with this user
+    public ResponseObject<List<Task>> viewUserTasks(@PathVariable(name = "userId") int userId) {
         ResponseObject<List<Task>> res = new ResponseObject();
-        res.setData(taskService.listTasksByUserId(userId));
+        res.setData(userService.listTasksByTaskOwnerId(userId));
         return res;
     }
 
-
-    @GetMapping("/{userId}/tasks/{taskId}") // new - is this needed?
-    // this should return a specific task (associated with this user)
-    public ResponseObject<Task> viewUserChats(@PathVariable(name = "userId") int userId, @PathVariable(name = "taskId") int taskId) {
-        ResponseObject<Task> res = new ResponseObject();
-        res.setData(taskService.listByTaskId(taskId));
-        return res;
-    }
-
-    @GetMapping("/{userId}/projects") // new
-    // this should return all projects that the user is a stakeholder of (including as Project Owner)
-    public ResponseObject<List<Project>> viewProjects(@PathVariable(name = "userId") int userId) {
+    // works
+    @GetMapping("/{userId}/projects")
+    // return all projects that the user is a stakeholder of (including as Project Owner)
+    public ResponseObject<List<Project>> viewUserProjects(@PathVariable(name = "userId") int userId) {
         ResponseObject<List<Project>> res = new ResponseObject();
         res.setData(userService.listProjectsByUserId(userId));
         return res;
     }
 
+    // works
+    @GetMapping("/{userId}/tasks/{taskId}") // TODO is this needed?
+    // return a specific task (associated with this user)
+    public ResponseObject<Task> viewUserTasks(@PathVariable(name = "userId") int userId, @PathVariable(name = "taskId") int taskId) {
+        ResponseObject<Task> res = new ResponseObject();
+        res.setData(taskService.listByTaskId(taskId));
+        return res;
+    }
+
+    @PostMapping("/{houseId}") // TODO collect houseId upon registration and pass it here
+    // create/save new user
+    public ResponseObject<User> createUser(@RequestBody User newUser,
+                                           @PathVariable(name = "houseId") int houseId) {
+        ResponseObject<User> res = new ResponseObject();
+        res.setData(userService.saveUser(newUser, houseId));
+        return res;
+    }
 }

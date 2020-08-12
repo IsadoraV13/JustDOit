@@ -18,9 +18,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int userId;
     @NotEmpty(message = "Username may not be empty")
-    private String userName;
+    private String username;
     @Column(columnDefinition = "boolean default 1")
-    Boolean isActive;
+    Boolean enabled;
     @NotEmpty(message = "Passwords are mandatory")
     private String password;
     @NotEmpty(message = "We need an email address to be able to register you")
@@ -28,6 +28,11 @@ public class User {
     private String firstName;
     private String lastName;
     private String profilePicUrl;
+    private int mainProjectId;
+    //TODO need to find a way to:
+    // 1) define first project as default Main project (can be changed by user *only* once there is a second one)
+    // 2) not allow more that one Project to be set as Main at a time
+    // 3) always have a Main project (cannot switch all to non-Main)
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
@@ -39,29 +44,26 @@ public class User {
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-            name = "userTask",
+            name = "projectStakeholder",
             joinColumns = { @JoinColumn(name = "userId") },
-            inverseJoinColumns = { @JoinColumn(name = "taskId") }
+            inverseJoinColumns = { @JoinColumn(name = "projectId") }
     )
-    private Set<Task> userTask;
+    private Set<Project> projectStakeholder;
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-            name = "projectStakeholder",
-            joinColumns = {
-                    @JoinColumn(name = "userId"),
-                    @JoinColumn(name = "projectId"),
-                    @JoinColumn(name = "roleId")}
-            // will this work?
+            name = "houseMember",
+            joinColumns = { @JoinColumn(name = "userId") },
+            inverseJoinColumns = { @JoinColumn(name = "houseId") }
     )
-    private Set<Project> userProject;
+    private Set<House> houseMember;
 
 
     public User() {
     }
 
-    public User(String userName, String password, String email) {
-        this.userName = userName;
+    public User(String username, String password, String email) {
+        this.username = username;
         this.password = password;
         this.email = email;
     }
@@ -74,20 +76,20 @@ public class User {
         this.userId = userId;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public Boolean getIsActive() {
-        return isActive;
+    public Boolean getEnabled() {
+        return enabled;
     }
 
-    public void setIsActive(Boolean active) {
-        isActive = active;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getPassword() {
@@ -130,6 +132,14 @@ public class User {
         this.profilePicUrl = profilePicUrl;
     }
 
+    public int getMainProjectId() {
+        return mainProjectId;
+    }
+
+    public void setMainProjectId(int mainProjectId) {
+        this.mainProjectId = mainProjectId;
+    }
+
     public Set<Role> getUserRole() {
         return userRole;
     }
@@ -138,19 +148,19 @@ public class User {
         this.userRole = userRole;
     }
 
-    public Set<Task> getUserTask() {
-        return userTask;
+    public Set<Project> getProjectStakeholder() {
+        return projectStakeholder;
     }
 
-    public void setUserTask(Set<Task> userTask) {
-        this.userTask = userTask;
+    public void setProjectStakeholder(Set<Project> projectStakeholder) {
+        this.projectStakeholder = projectStakeholder;
     }
 
-    public Set<Project> getUserProject() {
-        return userProject;
+    public Set<House> getHouseMember() {
+        return houseMember;
     }
 
-    public void setUserProject(Set<Project> userProject) {
-        this.userProject = userProject;
+    public void setHouseMember(Set<House> houseMember) {
+        this.houseMember = houseMember;
     }
 }
