@@ -1,0 +1,165 @@
+* {
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+/* top banner */
+header {
+  height: 75px;
+  width: 100vw;
+}
+
+#header {
+  width: 100%;
+  height: 100%;
+  background-color:#0B48A3;
+  display: flex;
+}
+
+.header-message {
+  color: white;
+  margin: 10px;
+}
+
+#header-icons {
+  height: 100%;
+  width: 100%;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+#header-icons ul {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+
+#header-icons ul li {
+  list-style-type: none;
+}
+
+#header-icons button {
+  background-color: inherit;
+  color: white;
+}
+
+
+/* top banner */
+.main-horizontal-content {
+  width: 100vw;
+  height: calc(100vh - 75px);
+  border: 2px solid black;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #96B2D3;
+}
+
+#main-project {
+  height: 100%;
+  width: 40%;
+  background-color: white;
+  border-right: 2px solid black;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+
+#other-projects {
+  height: 100%;
+  width: 56%;
+  margin-right: 30px;
+  background-color: #86878a;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.project-summary {
+  width: calc(100% - 45px);
+  margin: 10px;
+  padding: 10px;
+  background-color: #a7b3c7;
+  border: 2px solid;
+}
+
+.img-wrap > img {
+  width: 49px;
+  height: 49px;
+  border-radius: 50%;
+}
+
+.message-box {
+  width: 100%;
+  height: 70px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-right; 10px;
+  background-color: #ededed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* new task */
+.message-box .form-wrap {
+  width: 80%;
+  height: 60%;
+  background-color: white;
+}
+
+.message-box .form-wrap form {
+  width: 100%;
+  height: 100%;
+}
+
+input[name="message"] {
+  width: 90%;
+  margin-left: 3%;
+  border: none;
+  font-size: 14px;
+  height: 90%; /* line-height is like line spacing for text based elements */
+}
+
+.svg-wrap {
+  border: none;
+  background-color: #ededed;
+}
+
+#logIn-signUp {
+  width: 100px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding: 10px;
+}
+
+#login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  max-width: 40vw;
+  padding: 10px;
+}
+input[type="text"] {
+  max-width: 50%;
+  width: 50%;
+  margin-bottom: 16px;
+}
+input[type="submit"] {
+  background-color: rgb(0, 140, 255);
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+}
