@@ -9,14 +9,15 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
- 
+
 @Configuration
 @EnableAutoConfiguration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
- 
+
 	@Autowired
 	DataSource dataSource;
 
@@ -39,26 +40,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 						"where email = ?");
 //				.passwordEncoder(bCryptPasswordEncoder);
 	}
- 
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.
 				authorizeRequests()
-				.antMatchers("/", "/login", "/home", "/registration", "/users/**",
+				.antMatchers("/", "/login", "/registration", "/users/**",
 						"/tasks/**", "/projects/**", "/houses/**").permitAll()
 //				.antMatchers("/users/**").hasAuthority(("houseMember"))
 //				.antMatchers("/admin/**").hasAuthority("Admin")
 				.anyRequest().authenticated()
-				.and().csrf().disable().formLogin();
-//				.loginPage("/login").failureUrl("/login?error=true")
-//				.defaultSuccessUrl("/home")
-//				.usernameParameter("email")
-//				.passwordParameter("password")
-//				.and()
-//				.logout()
-//				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-//				.logoutSuccessUrl("/").and().exceptionHandling();
-//				.accessDeniedPage("/403");
+				.and().csrf().disable().formLogin()
+				.loginPage("/login").failureUrl("/login?error=true")
+				.defaultSuccessUrl("/home")
+				.usernameParameter("email")
+				.passwordParameter("password")
+				.and()
+				.logout()
+				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+				.logoutSuccessUrl("/").and().exceptionHandling()
+				.accessDeniedPage("/403");
 	}
 
 	@Override

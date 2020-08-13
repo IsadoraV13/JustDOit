@@ -4,6 +4,7 @@ import com.justdoit.POJOs.Project;
 import com.justdoit.POJOs.ProjectSummary;
 import com.justdoit.POJOs.Task;
 import com.justdoit.POJOs.User;
+import com.justdoit.exceptions.CustomProjectException;
 import com.justdoit.repositories.ProjectRepository;
 import com.justdoit.repositories.TaskRepository;
 import com.justdoit.repositories.UserRepository;
@@ -91,8 +92,12 @@ public class ProjectService {
     // Need something here to define project deadline computation
     // ********************
 
-    public Project listByProjectId(int projectId) {
-        return projectRepo.findOne(projectId);
+    public Project listByProjectId(int projectId) throws CustomProjectException {
+        try {
+            return projectRepo.findOne(projectId);
+        }catch (Exception e){
+            throw new CustomProjectException("unable to find projects by project id", projectId);
+        }
     }
 
     public void deleteProject(int projectId) {
