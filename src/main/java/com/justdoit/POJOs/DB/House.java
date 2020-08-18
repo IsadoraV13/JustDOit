@@ -1,7 +1,8 @@
-package com.justdoit.POJOs;
+package com.justdoit.POJOs.DB;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="house")
@@ -9,7 +10,7 @@ public class House {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int houseId;
-    @NotNull
+    @NotEmpty(message = "Household name may not be empty")
     private String houseName;
 
     public House() {

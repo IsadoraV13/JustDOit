@@ -1,9 +1,9 @@
 package com.justdoit.service;
 
-import com.justdoit.POJOs.Project;
+import com.justdoit.POJOs.DB.Project;
+import com.justdoit.POJOs.DB.Task;
+import com.justdoit.POJOs.DB.User;
 import com.justdoit.POJOs.ProjectSummary;
-import com.justdoit.POJOs.Task;
-import com.justdoit.POJOs.User;
 import com.justdoit.exceptions.CustomProjectException;
 import com.justdoit.repositories.ProjectRepository;
 import com.justdoit.repositories.TaskRepository;
@@ -38,43 +38,63 @@ public class ProjectService {
         return projectRepo.findAll();
     }
 
+    public Project listByProjectId(int projectId) throws CustomProjectException {
+        try {
+            return projectRepo.findOne(projectId);
+        }catch (Exception e){
+            throw new CustomProjectException("unable to find this project", projectId);
+        }
+    }
+
     // TODO check
-    public int listImminentTaskDeadlineWarning(int projectId) {
+    public List<Integer> listImminentTaskDeadlineWarning(int projectId) {
         List<Task> tasks = taskRepo.findTasksByProjectId(projectId);
-        int warnings = 0;
+        int imminent = 0;
+        int passed = 0;
+        List<Integer> warnings = new ArrayList<>();
         for (Task task : tasks) {
             Date deadlineDate = new Date(task.getTaskDeadline().getTime());
             long timeLeft = DAYS.between(LocalDate.now(), deadlineDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
             if(timeLeft < 1)
-                warnings ++;
+                imminent ++;
+            if(timeLeft < 0)
+                passed ++;
         }
+        warnings.add(0, imminent);
+        warnings.add(1, passed);
         return warnings;
     }
 
-    public List<ProjectSummary> listProjectSummaries(int userId) {
-        List<ProjectSummary> projectSummaries = new ArrayList<>();
+    public List<Integer> listOtherProjectIds(int userId) {
         // find user
         User user = userRepo.findOne(userId);
         // find user's list of projects
         List<Integer> projectIds = projectRepo.findProjectIdByUserId(userId);
-        System.out.println(projectIds); // this is returning the correct projectIds
-        // then find non-Main project and their tasks
+        // then find non-Main projects
+        List<Integer> otherProjectIds = new ArrayList<>();
         for (Integer projectId : projectIds) {
-            if (projectId != user.getMainProjectId()) {
-                // for each non-Main projectId, find the project
-                // & create a new ProjectSummary object and set its attributes based on that project
-                Project project = projectRepo.findOne(projectId);
-                ProjectSummary ps = new ProjectSummary();
-                ps.setProjectName(project.getProjectName());
-                ps.setProjectDeadline(project.getProjectDeadline());
-                int warnings = listImminentTaskDeadlineWarning(projectId);
-                // TODO this doesn't work for tasks that have already expired
-                if (warnings > 1)
-                    ps.setWarning("You have " + warnings + " tasks about to miss their deadline");
-                else if (warnings == 1)
-                    ps.setWarning("You have 1 task about to miss its deadline");
-                projectSummaries.add(ps);
-            }
+            if (projectId != user.getMainProjectId())
+                otherProjectIds.add(projectId);
+        }
+        return otherProjectIds;
+    }
+
+    public List<ProjectSummary> listProjectSummaries(List<Integer> projectIds, int userId) {
+        List<ProjectSummary> projectSummaries = new ArrayList<>();
+        for (Integer projectId : projectIds) {
+            // for each non-Main projectId, find the project
+            // & create a new ProjectSummary object and set its attributes based on that project
+            Project project = projectRepo.findOne(projectId);
+            ProjectSummary ps = new ProjectSummary();
+            ps.setProjectName(project.getProjectName());
+            ps.setProjectDeadline(project.getProjectDeadline());
+            List<Integer> warnings = listImminentTaskDeadlineWarning(projectId);
+            // TODO tasks that have already expired
+            if (warnings.get(0) > 0)
+                ps.setImminentDeadlineWarning("You have 1 or more tasks about to miss its deadline");
+            if (warnings.get(1) > 0)
+                ps.setPassedDeadlineWarning("You have 1 or more tasks with a missed deadline");
+            projectSummaries.add(ps);
         }
         return projectSummaries;
     }
@@ -92,13 +112,7 @@ public class ProjectService {
     // Need something here to define project deadline computation
     // ********************
 
-    public Project listByProjectId(int projectId) throws CustomProjectException {
-        try {
-            return projectRepo.findOne(projectId);
-        }catch (Exception e){
-            throw new CustomProjectException("unable to find projects by project id", projectId);
-        }
-    }
+
 
     public void deleteProject(int projectId) {
         projectRepo.deleteByProjectId(projectId);

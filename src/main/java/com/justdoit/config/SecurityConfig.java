@@ -37,8 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 						"on r.roleId = ur.roleId " +
 						"join user u " +
 						"on ur.userId = u.userId " +
-						"where email = ?");
-//				.passwordEncoder(bCryptPasswordEncoder);
+						"where email = ?")
+				.passwordEncoder(bCryptPasswordEncoder);
 	}
 
 	@Override

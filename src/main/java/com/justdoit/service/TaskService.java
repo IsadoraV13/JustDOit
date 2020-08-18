@@ -1,6 +1,7 @@
 package com.justdoit.service;
 
-import com.justdoit.POJOs.Task;
+import com.justdoit.POJOs.DB.Task;
+import com.justdoit.POJOs.DB.User;
 import com.justdoit.POJOs.TaskPreview;
 import com.justdoit.repositories.ProjectRepository;
 import com.justdoit.repositories.TaskRepository;
@@ -21,6 +22,8 @@ public class TaskService {
     private ProjectRepository projectRepo;
     @Autowired
     private UserService userService;
+    @Autowired
+    private ProjectService projectService;
 
     // admin only
     public List<Task> listAllTasks() {
@@ -40,19 +43,9 @@ public class TaskService {
         return taskRepo.save(newTask);
     }
 
-//    public int listMainProjectId(int userId) {
-//        int projectId = 0;
-//        // find user's list of projects
-//        List<Project> projects = projectRepo.findProjectIdByUserId(userId);
-//        // then find Main project and its tasks
-//        for (Project project : projects) {
-//            if (project.getIsMainProject() == true)
-//                projectId = project.getProjectId();
-//        }
-//        return projectId;
-//    }
-
-    public List<TaskPreview> listTaskPreviews(int projectId) {
+    public List<TaskPreview> listTaskPreviews(int userId) {
+        User user = userService.listByUserId(userId);
+        int projectId = user.getMainProjectId();
         List<TaskPreview> taskPreviews = new ArrayList<>();
         List<Task> tasks = listTaskByProjectId(projectId);
         for (Task task : tasks) {

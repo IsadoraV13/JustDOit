@@ -1,4 +1,4 @@
-package com.justdoit.POJOs;
+package com.justdoit.POJOs.DB;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

@@ -1,10 +1,10 @@
-package com.justdoit.POJOs;
-
+package com.justdoit.POJOs.DB;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.util.Set;
+
 
 // a user can register as part of a HH or directly on their own (and then become the HH Head)
 // all users eventually become HH members, otherwise there is no utility for them to be registered

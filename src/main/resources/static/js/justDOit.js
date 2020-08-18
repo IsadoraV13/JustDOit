@@ -3,11 +3,10 @@ let baseUrl = '/users';
 // hidden element that passes the userId into the URL
 let userId = document.getElementById('user_id').value;
 
-//********************************
-// fetch info for left sidebar
-//********************************
-// this will run asynchronously as soon as the page is loaded
-// it takes time to convert the readable stream to Json
+//*************************************************
+// fetch info TaskPreviews for Main Project (left)
+//*************************************************
+// runs asynchronously as soon as page is loaded (takes time to convert the readable stream to Json)
 // in the meantime, other things can load on the page
 (function getTaskPreviews() {
     fetch(`${baseUrl}/${userId}/taskpreviews`)
@@ -20,10 +19,58 @@ let userId = document.getElementById('user_id').value;
         })
 })();
 
+//**********************************************
+// create each task preview (from main project)
+//**********************************************
+function createTaskPreview (taskPreviewObj) {
+    // create parent div (taskPreviewBox)
+    let taskPreviewBox = document.createElement('div');
+    // create 4 children div (description, Owner, deadline, priority)
+    // & paragraphs and add content as innerHTML
+    let taskDescription = document.createElement('div');
+    let description = document.createElement('p');
+    description.innerHTML = taskPreviewObj.taskDescription; //TODO ******* check
+    taskDescription.appendChild(description);
+    let taskOwner = document.createElement('div');
+    let owner = document.createElement('p');
+    owner.innerHTML = taskPreviewObj.taskOwner;
+    taskOwner.appendChild(owner);
+    let taskDeadline = document.createElement('div');
+    let date = document.createElement('p');
+    date.innerHTML = new Date(taskPreviewObj.taskDeadline).toLocaleDateString();
+    taskDeadline.appendChild(date);
+    let taskPriority = document.createElement('div');
+    let priority = document.createElement('p');
+    priority.innerHTML = taskPreviewObj.taskPriority;
+    taskPriority.appendChild(priority);
+
+    // add class
+    taskPreviewBox.classList.add("task-preview-box");
+    taskDescription.classList.add("task-description");
+    taskOwner.classList.add("task-owner");
+    taskDeadline.classList.add("task-deadline");
+    taskPriority.classList.add("task-priority");
+    // set an attribute (to identify that specific task for a click listener [next])
+    taskPreviewBox.setAttribute('data-task_id', taskPreviewObj.taskId);
+    taskPreviewBox.addEventListener('click', taskPreviewClick);
+    // also add the attribute to all children
+    taskDescription.setAttribute('data-task_id', taskPreviewObj.taskId);
+    taskOwner.setAttribute('data-task_id', taskPreviewObj.taskId);
+    taskDeadline.setAttribute('data-task_id', taskPreviewObj.taskId);
+    taskPriority.setAttribute('data-task_id', taskPreviewObj.taskId);
+    //append all children to parent div
+    taskPreviewBox.appendChild(taskDescription);
+    taskPreviewBox.appendChild(taskOwner);
+    taskPreviewBox.appendChild(taskDeadline);
+    taskPreviewBox.appendChild(taskPriority);
+    // add back to body
+    document.getElementById('main-project-wrapper').append(taskPreviewBox);
+}
+
 //************************************************************
-// click listener that listens for a click on each chatPreview
+// click listener that listens for a click on each taskPreview
 //************************************************************
-// and then creates each chatBubble for the chat_id clicked
+// and then creates opens a task pane for the task_id clicked
 function taskPreviewClick(event) {
     let taskId = event.target.dataset.task_id; // assign 'chatId' to the data attribute 'chat_id' that we assigned (in createTaskPreview)
     // to the various elements of the preview box (these are the targets of the click event) - each of which holds the corresponding
@@ -50,11 +97,11 @@ function taskPreviewClick(event) {
 // submit listener that waits for a user to enter a newMessage
 //************************************************************
 //prevents the default behaviour and prevents the page re-loading 20.27
-let messageForm = document.getElementById("send-message");
+let messageForm = document.getElementById("save-task");
 
 messageForm.addEventListener('submit', function (event) {
     event.preventDefault();
-    let newMessage = document.getElementById('new-message').value;
+    let newMessage = document.getElementById('new-task').value;
     let userId = document.getElementById('user_id').value;
     let newMsgObj = { // our API documentation says we need a senderId, a chatId, and a message content (& timestamp??)
         senderId: parseInt(userId),
@@ -95,7 +142,7 @@ addProjectStakeholder.addEventListener('click', findStakeholdersToAdd)
 
 
 //************************************************************
-// function to determine who we can start a new duo chat with >>improvement: start new group chat
+// function to determine who we can add as a project stakeholder
 //************************************************************
 function findStakeholdersToAdd() {
     let remainingUsers =[];
@@ -234,54 +281,7 @@ const createProjectSummaryBox = (projectSummary) => {
     document.getElementById('project-summary-wrapper').append(projectSummaryBox);
 }
 
-//*************************************
-// create each task preview (from main project) on the left
-//*************************************
-function createTaskPreview (taskPreviewObj) {
-    // create parent div (taskPreviewBox)
-    let taskPreviewBox = document.createElement('div');
-    // create 4 children div (description, Owner, deadline, priority)
-    // & paragraphs and add content as innerHTML
-    let taskDescription = document.createElement('div');
-    let description = document.createElement('p');
-    description.innerHTML = taskPreviewObj.taskDescription; //TODO ******* check
-    taskDescription.appendChild(description);
-    let taskOwner = document.createElement('div');
-    let owner = document.createElement('p');
-    owner.innerHTML = taskPreviewObj.taskOwner;
-    taskOwner.appendChild(owner);
-    let taskDeadline = document.createElement('div');
-    let date = document.createElement('p');
-    date.innerHTML = new Date(taskPreviewObj.taskDeadline).toLocaleDateString();
-    taskDeadline.appendChild(date);
-    let taskPriority = document.createElement('div');
-    let priority = document.createElement('p');
-    priority.innerHTML = taskPreviewObj.taskPriority;
-    taskPriority.appendChild(priority);
 
-    // add class
-    taskPreviewBox.classList.add("task-preview-box");
-    taskDescription.classList.add("task-description");
-    taskOwner.classList.add("task-owner");
-    taskDeadline.classList.add("task-deadline");
-    taskPriority.classList.add("task-priority");
-    // set an attribute (to identify that specific task for a click listener [next])
-    taskPreviewBox.setAttribute('data-task_id', taskPreviewObj.taskId);
-    taskPreviewBox.addEventListener('click', taskPreviewClick);
-    // also add the attribute to all children
-    taskDescription.setAttribute('data-task_id', taskPreviewObj.taskId);
-    taskOwner.setAttribute('data-task_id', taskPreviewObj.taskId);
-    taskDeadline.setAttribute('data-task_id', taskPreviewObj.taskId);
-    taskPriority.setAttribute('data-task_id', taskPreviewObj.taskId);
-    //append all children to parent div
-    taskPreviewBox.appendChild(taskDescription);
-    taskPreviewBox.appendChild(taskOwner);
-    taskPreviewBox.appendChild(taskDeadline);
-    taskPreviewBox.appendChild(taskPriority);
-    // add back to body
-    document.getElementById('main-project-wrapper').append(taskPreviewBox);
-
-}
 
 
 

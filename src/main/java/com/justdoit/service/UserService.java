@@ -1,6 +1,7 @@
 package com.justdoit.service;
 
-import com.justdoit.POJOs.*;
+
+import com.justdoit.POJOs.DB.*;
 import com.justdoit.repositories.ProjectRepository;
 import com.justdoit.repositories.RoleRepository;
 import com.justdoit.repositories.TaskRepository;
@@ -56,15 +57,11 @@ public class UserService {
         return taskRepo.findTasksByTaskOwnerUserId(userId);
     }
 
-    public User saveUser(User user, int houseId) {
-//        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-//        user.setIsActive(true); // ***** is this needed??
-        Role userRole = roleRepo.findByRoleName("houseMember");
-        user.setUserRole(new HashSet<Role>(Arrays.asList(userRole)));
-
-        // CHECK *********************************************
-        user.setHouseMember(new HashSet<House>(Arrays.asList(houseService.listByHouseId(houseId))));
-        // ***************************************************
+    public User saveUser(User user, House house) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setEnabled(true);
+        user.setUserRole(new HashSet<Role>(Arrays.asList(roleRepo.findByRoleName("houseMember"))));
+        user.setHouseMember(new HashSet<House>(Arrays.asList(houseService.listByHouseName(house.getHouseName()))));
         return userRepo.save(user);
     }
 
@@ -72,7 +69,7 @@ public class UserService {
         return userRepo.findByEmail(email);
     }
 
-    public User listUserById(int userId) {
+    public User listByUserId(int userId) {
         return userRepo.findOne(userId);
     }
 

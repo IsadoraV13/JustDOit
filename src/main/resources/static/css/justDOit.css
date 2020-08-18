@@ -54,7 +54,7 @@ header {
 }
 
 
-/* top banner */
+/* main content */
 .main-horizontal-content {
   width: 100vw;
   height: calc(100vh - 75px);
@@ -65,6 +65,7 @@ header {
   background-color: #96B2D3;
 }
 
+/* main project */
 #main-project {
   height: 100%;
   width: 40%;
@@ -76,6 +77,30 @@ header {
   align-items: flex-end;
 }
 
+/* main project task preview */
+.task-preview-wrap {
+background-color:#ffffff;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow-y: scroll;
+}
+
+/* each individual message preview box */
+.individual-msg-preview-box {
+    background-color: #ffffff;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+/* other project summaries */
 #other-projects {
   height: 100%;
   width: 56%;
@@ -100,7 +125,8 @@ header {
   border-radius: 50%;
 }
 
-.message-box {
+/* new task */
+.new-task-wrap {
   width: 100%;
   height: 70px;
   padding-left: 5px;
@@ -112,14 +138,13 @@ header {
   align-items: center;
 }
 
-/* new task */
-.message-box .form-wrap {
+.form-wrap {
   width: 80%;
   height: 60%;
   background-color: white;
 }
 
-.message-box .form-wrap form {
+.form-wrap form {
   width: 100%;
   height: 100%;
 }

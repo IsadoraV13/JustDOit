@@ -1,14 +1,13 @@
 package com.justdoit.POJOs;
 
 import java.util.Date;
-import java.util.List;
 
 public class ProjectSummary {
     private String projectName;
     private Date projectDeadline;
-    private String warning; // will need a method to pull together the warning text
-    private String recentActivity; // will also need a method
-    private List<TaskPreview> taskPreviews;
+    private String imminentDeadlineWarning;
+    private String passedDeadlineWarning;
+    private String recentActivity; // will need a method to pull together text
 
     public String getProjectName() {
         return projectName;
@@ -26,12 +25,20 @@ public class ProjectSummary {
         this.projectDeadline = projectDeadline;
     }
 
-    public String getWarning() {
-        return warning;
+    public String getImminentDeadlineWarning() {
+        return imminentDeadlineWarning;
     }
 
-    public void setWarning(String warning) {
-        this.warning = warning;
+    public void setImminentDeadlineWarning(String imminentDeadlineWarning) {
+        this.imminentDeadlineWarning = imminentDeadlineWarning;
+    }
+
+    public String getPassedDeadlineWarning() {
+        return passedDeadlineWarning;
+    }
+
+    public void setPassedDeadlineWarning(String passedDeadlineWarning) {
+        this.passedDeadlineWarning = passedDeadlineWarning;
     }
 
     public String getRecentActivity() {
@@ -42,11 +49,4 @@ public class ProjectSummary {
         this.recentActivity = recentActivity;
     }
 
-    public List<TaskPreview> getTaskPreviews() {
-        return taskPreviews;
-    }
-
-    public void setTaskPreviews(List<TaskPreview> taskPreviews) {
-        this.taskPreviews = taskPreviews;
-    }
 }

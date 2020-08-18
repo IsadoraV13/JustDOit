@@ -1,7 +1,8 @@
 package com.justdoit.controller;
 
 
-import com.justdoit.POJOs.User;
+import com.justdoit.POJOs.DB.House;
+import com.justdoit.POJOs.DB.User;
 import com.justdoit.service.HouseService;
 import com.justdoit.service.UserService;
 import org.slf4j.Logger;
@@ -11,8 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 
@@ -28,47 +29,55 @@ public class WebController {
     @Autowired
     private HouseService houseService;
 
-    @RequestMapping(value={"/", "/login"}, method = RequestMethod.GET)
-    public String login(Model model){
+    @RequestMapping(value={"/", "/login"})
+    public String login(){
         log.debug("login");
         return "login";
     }
 
-    @RequestMapping(value="/registration", method = RequestMethod.GET)
+    @RequestMapping("/registration" )
     public String registration(Model model){
-        User user = new User();
-        model.addAttribute("user", user); //we do model.addAttribute(user) here to pass the
-        // user attributes which are then displayed on the registration view
+        // model.addAttribute(user) below passes User attributes which are then displayed on the Registration pg
+        model.addAttribute("user", new User());
+        model.addAttribute("house", new House());
         return "registration";
     }
 
-    @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String createNewUser(@Valid User user, int houseId, BindingResult bindingResult, Model model) {
-        //TODO do something with houseId here
+    @PostMapping("/registration")
+    public String createNewUser(@Valid User user, BindingResult bindingResultUser,
+                                @Valid House house, BindingResult bindingResultHouse,
+                                Model model) {
 
         User userExists = userService.listUserByEmail(user.getEmail());
+        House houseExists = houseService.listByHouseName(house.getHouseName());
 
         if (userExists != null) {
-            bindingResult
-                    .rejectValue("email", "error.user",
+            bindingResultUser.rejectValue("email", "error.user",
                             "Mmmmm.. There is already a user registered with this email address.");
         }
 
-        if (bindingResult.hasErrors()) {
+        if (bindingResultUser.hasErrors() || bindingResultHouse.hasErrors()) {
             model.addAttribute("failureMessage", "Sorry " + user.getFirstName() + ", some " +
                     "fields are incorrect; can you try again?");
             return "registration";
 
         } else {
-            userService.saveUser(user, houseId);
+            if (houseExists == null) {
+                houseService.saveHouse(house);
+            }
+            userService.saveUser(user, house);
             model.addAttribute("successMessage", user.getFirstName() + ", you have been " +
-                    "successfully registered as a member of " + houseService.listByHouseId(houseId) + ".");
+                    "successfully registered as a new member of " + house.getHouseName() + ".");
+            // these reset the fields (make them blank) after a user is successfully registered
             model.addAttribute("user", new User());
+            model.addAttribute("house", new House());
             return "registration";
         }
 
     }
-    @RequestMapping(value="/home", method = RequestMethod.GET)
+
+
+    @RequestMapping("/home")
     public String index(Authentication auth, Model model){
         // get id of currently authenticated user
 //        int user_id = userService.listUserByEmail(auth.getName()).getUserId();

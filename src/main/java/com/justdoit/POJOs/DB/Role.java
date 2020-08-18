@@ -1,4 +1,4 @@
-package com.justdoit.POJOs;
+package com.justdoit.POJOs.DB;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

@@ -1,6 +1,6 @@
 package com.justdoit.repositories;
 
-import com.justdoit.POJOs.Role;
+import com.justdoit.POJOs.DB.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

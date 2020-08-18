@@ -15,52 +15,61 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
+<!--            th:object="${user}" before method-->
             <form autocomplete="off" action="#" th:action="@{/registration}"
-                  th:object="${user}" method="post" class="form-horizontal"
-                  role="form">
-                <h2>Registration Form</h2>
+                  method="post" class="form-horizontal" role="form">
+                <h2>Don't have an account? Register here! </h2>
                 <div class="form-group">
-                    <div class="col-sm-9">
-                        <label th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"
-                               class="validation-message"></label>
-                        <input type="text" th:field="*{firstName}" placeholder="Name"
+                    <div class="col-sm-15">
+                        <input type="text" th:value="${house.houseName}"
+                               placeholder="Household: choose a new name to create your own Household, or type in an existing Household name to join" name="houseName"
                                class="form-control" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-9">
-                        <label th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"
+                        <label th:if="${#fields.hasErrors('house.houseName')}" th:errors="*{house.houseName}"
                                class="validation-message"></label>
-                        <input type="text" th:field="*{lastName}"
-                               placeholder="Last Name" class="form-control" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-9">
-                        <input type="text" th:field="*{email}" placeholder="Email"
-                               class="form-control" /> <label
-                            th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                    <div class="col-sm-15">
+                        <input type="text" th:value="${user.firstName}" placeholder="First name" name="firstName"
+                               class="form-control" />
+                        <label th:if="${#fields.hasErrors('user.firstName')}" th:errors="*{user.firstName}"
+                               class="validation-message"></label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-15">
+                        <input type="text" th:value="${user.lastName}" placeholder="Last name" name="lastName"
+                               class="form-control" />
+                        <label th:if="${#fields.hasErrors('user.lastName')}" th:errors="*{user.lastName}"
+                               class="validation-message"></label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-15">
+                        <input type="text" th:value="${user.email}" placeholder="Email" name="email"
+                               class="form-control" />
+                        <label th:if="${#fields.hasErrors('user.email')}" th:errors="*{user.email}"
                             class="validation-message"></label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-9">
-                        <input type="text" th:field="*{username}" placeholder="Username"
-                               class="form-control" /> <label
-                            th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
+                    <div class="col-sm-15">
+                        <input type="text" th:value="${user.username}" placeholder="Username" name="username"
+                               class="form-control" />
+                        <label th:if="${#fields.hasErrors('user.username')}" th:errors="*{user.username}"
                             class="validation-message"></label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-9">
-                        <input type="password" th:field="*{password}"
-                               placeholder="Password" class="form-control" /> <label
-                            th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+                    <div class="col-sm-15">
+                        <input type="password" th:value="${user.password}" placeholder="Password" name="password"
+                               class="form-control" />
+                        <label th:if="${#fields.hasErrors('user.password')}" th:errors="*{user.password}"
                             class="validation-message"></label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-9">
+                    <div class="col-sm-15">
                         <button type="submit" class="btn btn-primary btn-block">Register User</button>
                     </div>
                 </div>

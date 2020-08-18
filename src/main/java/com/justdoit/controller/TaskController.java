@@ -1,8 +1,7 @@
 package com.justdoit.controller;
 
+import com.justdoit.POJOs.DB.Task;
 import com.justdoit.POJOs.ResponseObject;
-import com.justdoit.POJOs.Task;
-import com.justdoit.POJOs.TaskPreview;
 import com.justdoit.service.TaskService;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +30,6 @@ public class TaskController {
     public ResponseObject<Task> viewTask(@PathVariable(value="taskId")int taskId) {
         ResponseObject<Task> res = new ResponseObject();
         res.setData(taskService.listByTaskId(taskId));
-        return res;
-    }
-
-    // works
-    @GetMapping("/{projectId}/taskpreviews")
-    // return all task info related to this projectId
-    public ResponseObject<List<TaskPreview>> viewTaskPreviewsByProjectId(@PathVariable(value="projectId")int projectId) {
-        ResponseObject<List<TaskPreview>> res = new ResponseObject<>();
-        res.setData(taskService.listTaskPreviews(projectId));
         return res;
     }
 

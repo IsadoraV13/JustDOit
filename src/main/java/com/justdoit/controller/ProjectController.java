@@ -1,7 +1,6 @@
 package com.justdoit.controller;
 
-import com.justdoit.POJOs.Project;
-import com.justdoit.POJOs.ProjectSummary;
+import com.justdoit.POJOs.DB.Project;
 import com.justdoit.POJOs.ResponseObject;
 import com.justdoit.exceptions.CustomTaskException;
 import com.justdoit.service.ProjectService;
@@ -37,15 +36,6 @@ public class ProjectController {
         } catch(Exception e){
             throw new CustomTaskException(e.getMessage());
         }
-        return res;
-    }
-
-    // works
-    @GetMapping("/{userId}/projectsummaries")
-    // return all non-main project summaries associated with this user
-    public ResponseObject<List<ProjectSummary>> viewProjectSummariesByUserId(@PathVariable(value="userId")int userId) {
-        ResponseObject<List<ProjectSummary>> res = new ResponseObject<>();
-        res.setData(projectService.listProjectSummaries(userId));
         return res;
     }
 

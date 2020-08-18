@@ -1,6 +1,6 @@
 package com.justdoit.service;
 
-import com.justdoit.POJOs.House;
+import com.justdoit.POJOs.DB.House;
 import com.justdoit.repositories.HouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,8 +24,12 @@ public class HouseService {
         return houseRepo.findOne(houseId);
     }
 
-    public House saveHouse(House newHouse) {
-        return houseRepo.save(newHouse);
+    public House listByHouseName(String houseName) {
+        return houseRepo.findByHouseName(houseName);
+    }
+
+    public House saveHouse(House house) {
+        return houseRepo.save(house);
     }
 
     public void deleteHouse(int houseId) {

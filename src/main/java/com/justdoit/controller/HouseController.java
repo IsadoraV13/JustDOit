@@ -1,6 +1,6 @@
 package com.justdoit.controller;
 
-import com.justdoit.POJOs.House;
+import com.justdoit.POJOs.DB.House;
 import com.justdoit.POJOs.ResponseObject;
 import com.justdoit.service.HouseService;
 import org.hibernate.ObjectNotFoundException;
@@ -29,14 +29,6 @@ public class HouseController {
     public ResponseObject<House> viewHouse(@PathVariable(value="houseId")int houseId) {
         ResponseObject<House> res = new ResponseObject();
         res.setData(houseService.listByHouseId(houseId));
-        return res;
-    }
-
-    @PostMapping
-    // create/save new House
-    public ResponseObject<House> createProject(@RequestBody House newHouse) {
-        ResponseObject<House> res = new ResponseObject();
-        res.setData(houseService.saveHouse(newHouse));
         return res;
     }
 
