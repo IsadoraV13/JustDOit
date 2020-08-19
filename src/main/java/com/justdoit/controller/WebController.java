@@ -80,8 +80,8 @@ public class WebController {
     @RequestMapping("/home")
     public String index(Authentication auth, Model model){
         // get id of currently authenticated user
-//        int user_id = userService.listUserByEmail(auth.getName()).getUserId();
-//        model.addAttribute("user_id", user_id);
+        int user_id = userService.listUserByEmail(auth.getName()).getUserId();
+        model.addAttribute("user_id", user_id);
         log.trace("Attempting to access home page");
         return "home";
     }

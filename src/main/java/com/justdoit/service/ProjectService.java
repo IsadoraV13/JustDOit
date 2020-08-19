@@ -53,12 +53,14 @@ public class ProjectService {
         int passed = 0;
         List<Integer> warnings = new ArrayList<>();
         for (Task task : tasks) {
-            Date deadlineDate = new Date(task.getTaskDeadline().getTime());
-            long timeLeft = DAYS.between(LocalDate.now(), deadlineDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-            if(timeLeft < 1)
-                imminent ++;
-            if(timeLeft < 0)
-                passed ++;
+            if (task.getIsComplete() == false) {
+                Date deadlineDate = new Date(task.getTaskDeadline().getTime());
+                long timeLeft = DAYS.between(LocalDate.now(), deadlineDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                if (timeLeft <= 1 && timeLeft >= 0)
+                    imminent++;
+                if (timeLeft < 0)
+                    passed++;
+            }
         }
         warnings.add(0, imminent);
         warnings.add(1, passed);
@@ -89,11 +91,11 @@ public class ProjectService {
             ps.setProjectName(project.getProjectName());
             ps.setProjectDeadline(project.getProjectDeadline());
             List<Integer> warnings = listImminentTaskDeadlineWarning(projectId);
-            // TODO tasks that have already expired
+            // TODO check that this works for all scenarios
             if (warnings.get(0) > 0)
-                ps.setImminentDeadlineWarning("You have 1 or more tasks about to miss its deadline");
+                ps.setImminentDeadlineWarning("This project has 1 or more tasks about to miss a deadline");
             if (warnings.get(1) > 0)
-                ps.setPassedDeadlineWarning("You have 1 or more tasks with a missed deadline");
+                ps.setPassedDeadlineWarning("This project has 1 or more tasks with a missed deadline");
             projectSummaries.add(ps);
         }
         return projectSummaries;

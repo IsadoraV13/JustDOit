@@ -60,7 +60,6 @@ header {
   height: calc(100vh - 75px);
   border: 2px solid black;
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   background-color: #96B2D3;
 }
@@ -72,16 +71,16 @@ header {
   background-color: white;
   border-right: 2px solid black;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-end;
+  align-items: flex-start;
 }
 
 /* main project task preview */
 .task-preview-wrap {
-background-color:#ffffff;
+    background-color:pink;
     width: 100%;
-    height: 100%;
+    height: calc(100% - 70px);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -90,10 +89,11 @@ background-color:#ffffff;
 }
 
 /* each individual message preview box */
-.individual-msg-preview-box {
-    background-color: #ffffff;
+.task-preview-box {
+    background-color: #4b81b8;
     width: 100%;
     height: 100px;
+    border-bottom: 1px solid black;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -109,6 +109,7 @@ background-color:#ffffff;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  overflow-y: scroll;
 }
 
 .project-summary {

@@ -9,7 +9,7 @@ let userId = document.getElementById('user_id').value;
 // runs asynchronously as soon as page is loaded (takes time to convert the readable stream to Json)
 // in the meantime, other things can load on the page
 (function getTaskPreviews() {
-    fetch(`${baseUrl}/${userId}/taskpreviews`)
+    fetch(`${baseUrl}/${userId}/mainproject/taskpreviews`)
         .then(res => res.json())  // fetching url returns a response, which is converted to json
         .then(resObj => { // json response has a body object with =>
             resObj.data.forEach(taskPreviewObj => { // a data property and under that, an array of taskPreview objects
@@ -18,6 +18,7 @@ let userId = document.getElementById('user_id').value;
             })
         })
 })();
+
 
 //**********************************************
 // create each task preview (from main project)
@@ -31,14 +32,17 @@ function createTaskPreview (taskPreviewObj) {
     let description = document.createElement('p');
     description.innerHTML = taskPreviewObj.taskDescription; //TODO ******* check
     taskDescription.appendChild(description);
+
     let taskOwner = document.createElement('div');
     let owner = document.createElement('p');
     owner.innerHTML = taskPreviewObj.taskOwner;
     taskOwner.appendChild(owner);
+
     let taskDeadline = document.createElement('div');
     let date = document.createElement('p');
     date.innerHTML = new Date(taskPreviewObj.taskDeadline).toLocaleDateString();
     taskDeadline.appendChild(date);
+
     let taskPriority = document.createElement('div');
     let priority = document.createElement('p');
     priority.innerHTML = taskPreviewObj.taskPriority;
@@ -64,7 +68,7 @@ function createTaskPreview (taskPreviewObj) {
     taskPreviewBox.appendChild(taskDeadline);
     taskPreviewBox.appendChild(taskPriority);
     // add back to body
-    document.getElementById('main-project-wrapper').append(taskPreviewBox);
+    document.querySelector('.task-preview-wrap').appendChild(taskPreviewBox);
 }
 
 //************************************************************
@@ -97,21 +101,21 @@ function taskPreviewClick(event) {
 // submit listener that waits for a user to enter a newMessage
 //************************************************************
 //prevents the default behaviour and prevents the page re-loading 20.27
-let messageForm = document.getElementById("save-task");
-
-messageForm.addEventListener('submit', function (event) {
-    event.preventDefault();
-    let newMessage = document.getElementById('new-task').value;
-    let userId = document.getElementById('user_id').value;
-    let newMsgObj = { // our API documentation says we need a senderId, a chatId, and a message content (& timestamp??)
-        senderId: parseInt(userId),
-        chatId: event.target.dataset.chat_id,
-        content: newMessage
-    }
-    createChatBubble(newMsgObj);
-    sendNewMessage(newMsgObj);
-    document.getElementById('new-message').value = ""; //resets form value
-});
+//let messageForm = document.getElementById("save-task");
+//
+//messageForm.addEventListener('submit', function (event) {
+//    event.preventDefault();
+//    let newMessage = document.getElementById('new-task').value;
+//    let userId = document.getElementById('user_id').value;
+//    let newMsgObj = { // our API documentation says we need a senderId, a chatId, and a message content (& timestamp??)
+//        senderId: parseInt(userId),
+//        chatId: event.target.dataset.chat_id,
+//        content: newMessage
+//    }
+//    createChatBubble(newMsgObj);
+//    sendNewMessage(newMsgObj);
+//    document.getElementById('new-message').value = ""; //resets form value
+//});
 
 //**************************************
 // a POST request to post/send a new msg
@@ -135,10 +139,10 @@ function createNewTask(newTask) { // this task object contains attributes stated
 //************************************************************
 // click listener to add HouseMembers to project
 //************************************************************
-let addProjectStakeholder = document.getElementById("add-stakeholder-btn");
-let addProjectStakeholderModalBody = document.getElementById("add-stakeholder-modal-body");
-addProjectStakeholderProjectModalBody.innerHTML = "now loading...";
-addProjectStakeholder.addEventListener('click', findStakeholdersToAdd)
+//let addProjectStakeholder = document.getElementById("add-stakeholder-btn");
+//let addProjectStakeholderModalBody = document.getElementById("add-stakeholder-modal-body");
+//addProjectStakeholderProjectModalBody.innerHTML = "now loading...";
+//addProjectStakeholder.addEventListener('click', findStakeholdersToAdd)
 
 
 //************************************************************
@@ -280,6 +284,7 @@ const createProjectSummaryBox = (projectSummary) => {
     projectSummaryBox.appendChild(tasks);
     document.getElementById('project-summary-wrapper').append(projectSummaryBox);
 }
+
 
 
 
