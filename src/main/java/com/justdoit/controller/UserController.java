@@ -77,7 +77,7 @@ public class UserController {
     }
 
     // works
-    @GetMapping("/{userId}/main/projectsummary")
+    @GetMapping("/{userId}/mainproject/projectsummary")
     // return main project summary associated with this user
     public ResponseObject<List<ProjectSummary>> viewMainProjectSummaryByUserId(@PathVariable(value="userId")int userId) {
         ResponseObject<List<ProjectSummary>> res = new ResponseObject<>();
@@ -88,7 +88,7 @@ public class UserController {
     }
 
     // works
-    @GetMapping("/{userId}/other/projectsummaries")
+    @GetMapping("/{userId}/otherprojects/projectsummaries")
     // return all non-main project summaries associated with this user
     public ResponseObject<List<ProjectSummary>> viewProjectSummariesByUserId(@PathVariable(value="userId")int userId) {
         ResponseObject<List<ProjectSummary>> res = new ResponseObject<>();

@@ -4,21 +4,106 @@ let baseUrl = '/users';
 let userId = document.getElementById('user_id').value;
 
 //*************************************************
-// fetch info TaskPreviews for Main Project (left)
+// fetch TaskPreviews for Main Project (left)
 //*************************************************
 // runs asynchronously as soon as page is loaded (takes time to convert the readable stream to Json)
 // in the meantime, other things can load on the page
 (function getTaskPreviews() {
-    fetch(`${baseUrl}/${userId}/mainproject/taskpreviews`)
+    fetch(`users/${userId}/mainproject/taskpreviews`)
         .then(res => res.json())  // fetching url returns a response, which is converted to json
-        .then(resObj => { // json response has a body object with =>
-            resObj.data.forEach(taskPreviewObj => { // a data property and under that, an array of taskPreview objects
-                // for each taskPreview obj, create a preview box using the createTaskPreview function (further down)
-                createTaskPreview(taskPreviewObj);
-            })
+        .then(resObj => { // json response has a body object with a data property and under that
+                    // an array of taskPreview objects
+            resObj.data.forEach(taskPreviewObj => createTaskPreview(taskPreviewObj));
+            // for each taskPreview obj, create a preview box using the createTaskPreview function (further down)
         })
 })();
 
+//*********************************************************
+// fetch ProjectSummaries (main or other project)
+//*********************************************************
+(function getMainProjectSummary() {
+    let wrap = document.querySelector('#main-project-summary-wrap');
+    fetch(`users/${userId}/mainproject/projectsummary`)
+        .then(res => res.json())
+        .then(resObj => {
+            resObj.data.forEach(projectSummaryObj => createProjectSummary(projectSummaryObj, wrap));
+        })
+        // add back to body
+//        .then(projectSummaryBox => document.querySelector('#main-project-summary-wrap').append(projectSummaryBox));
+})();
+
+
+(function getOtherProjectSummaries() {
+    let wrap = document.querySelector('#other-projects-summary-wrap');
+    fetch(`users/${userId}/otherprojects/projectsummaries`)
+        .then(res => res.json())
+        .then(resObj => {
+            resObj.data.forEach(projectSummaryObj => createProjectSummary(projectSummaryObj, wrap));
+        })
+        // add back to body
+//        .then(projectSummaryBox => document.querySelector('#other-projects-summary-wrap').append(projectSummaryBox))    ;
+
+})();
+
+
+//******************************************************
+// create each project Summary (main or other project)
+//******************************************************
+function createProjectSummary (projectSummaryObj, wrap) {
+    // create parent div (projectSummaryBox)
+    let projectSummaryBox = document.createElement('div');
+    // create 4 children div (projectName, projectDeadline, 2 warnings, recent activity)
+    // & paragraphs and add content as innerHTML
+    let projectName = document.createElement('div');
+    let name = document.createElement('p');
+    name.innerHTML = projectSummaryObj.projectName;
+    projectName.appendChild(name);
+
+    let projectDeadline = document.createElement('div');
+    let date = document.createElement('p');
+    date.innerHTML = new Date(projectSummaryObj.projectDeadline).toLocaleDateString();
+    projectDeadline.appendChild(date);
+
+    let imminentDeadlineWarning = document.createElement('div');
+    let imminentWarning = document.createElement('p');
+    imminentWarning.innerHTML = projectSummaryObj.imminentDeadlineWarning;
+    imminentDeadlineWarning.appendChild(imminentWarning);
+
+    let passedDeadlineWarning = document.createElement('div');
+    let passedWarning = document.createElement('p');
+    passedWarning.innerHTML = projectSummaryObj.passedDeadlineWarning;
+    passedDeadlineWarning.appendChild(passedWarning);
+
+    let recentActivity = document.createElement('div');
+    let activity = document.createElement('p');
+    activity.innerHTML = projectSummaryObj.recentActivity;
+    recentActivity.appendChild(activity);
+
+    // add class
+    projectSummaryBox.classList.add("project-summary-box");
+    projectName.classList.add("project-name");
+    projectDeadline.classList.add("deadline");
+    imminentDeadlineWarning.classList.add("warning");
+    passedDeadlineWarning.classList.add("warning");
+    recentActivity.classList.add("recent-activity");
+    // set an attribute (to identify that specific project for a click listener [next])
+    projectSummaryBox.setAttribute('data-task_id', projectSummaryObj.taskId);
+    //projectSummaryBox.addEventListener('click', projectSummaryClick); // TODO add this
+    // also add the attribute to all children // TODO is this needed on every element??
+    projectName.setAttribute('data-task_id', projectSummaryObj.taskId);
+    projectDeadline.setAttribute('data-task_id', projectSummaryObj.taskId);
+    imminentDeadlineWarning.setAttribute('data-task_id', projectSummaryObj.taskId);
+    passedDeadlineWarning.setAttribute('data-task_id', projectSummaryObj.taskId);
+    recentActivity.setAttribute('data-task_id', projectSummaryObj.taskId);
+    //append all children to parent div
+    projectSummaryBox.appendChild(projectName);
+    projectSummaryBox.appendChild(projectDeadline);
+    projectSummaryBox.appendChild(imminentDeadlineWarning);
+    projectSummaryBox.appendChild(passedDeadlineWarning);
+    projectSummaryBox.appendChild(recentActivity);
+    wrap.append(projectSummaryBox);
+
+}
 
 //**********************************************
 // create each task preview (from main project)
@@ -52,12 +137,12 @@ function createTaskPreview (taskPreviewObj) {
     taskPreviewBox.classList.add("task-preview-box");
     taskDescription.classList.add("task-description");
     taskOwner.classList.add("task-owner");
-    taskDeadline.classList.add("task-deadline");
+    taskDeadline.classList.add("deadline");
     taskPriority.classList.add("task-priority");
     // set an attribute (to identify that specific task for a click listener [next])
     taskPreviewBox.setAttribute('data-task_id', taskPreviewObj.taskId);
     taskPreviewBox.addEventListener('click', taskPreviewClick);
-    // also add the attribute to all children
+    // also add the attribute to all children // TODO is this needed on every element??
     taskDescription.setAttribute('data-task_id', taskPreviewObj.taskId);
     taskOwner.setAttribute('data-task_id', taskPreviewObj.taskId);
     taskDeadline.setAttribute('data-task_id', taskPreviewObj.taskId);
