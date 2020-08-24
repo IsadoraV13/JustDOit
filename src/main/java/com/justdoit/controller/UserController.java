@@ -70,9 +70,10 @@ public class UserController {
     // works
     @GetMapping("/{userId}/mainproject/taskpreviews")
     // return all task info related to this projectId
-    public ResponseObject<List<TaskPreview>> viewTaskPreviews(@PathVariable(value="userId")int userId) {
+    public ResponseObject<List<TaskPreview>> viewMainProjectTaskPreviews(@PathVariable(value="userId")int userId) {
         ResponseObject<List<TaskPreview>> res = new ResponseObject<>();
-        res.setData(taskService.listTaskPreviews(userId));
+        int mainProjectId = userService.listByUserId(userId).getMainProjectId();
+        res.setData(taskService.listTaskPreviews(mainProjectId, userId));
         return res;
     }
 

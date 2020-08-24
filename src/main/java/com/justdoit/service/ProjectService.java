@@ -33,6 +33,8 @@ public class ProjectService {
     private UserRepository userRepo;
     @Autowired
     private UserService userService;
+    @Autowired
+    private TaskService taskService;
 
     public List<Project> listAllProjects() {
         return projectRepo.findAll();
@@ -96,6 +98,7 @@ public class ProjectService {
                 ps.setImminentDeadlineWarning("This project has 1 or more tasks about to miss a deadline");
             if (warnings.get(1) > 0)
                 ps.setPassedDeadlineWarning("This project has 1 or more tasks with a missed deadline");
+            ps.setTaskPreviews(taskService.listTaskPreviews(projectId, userId));
             projectSummaries.add(ps);
         }
         return projectSummaries;

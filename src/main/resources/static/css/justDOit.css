@@ -61,25 +61,27 @@ header {
   border: 2px solid black;
   display: flex;
   justify-content: space-between;
-  background-color: #96B2D3;
+  background-color: white;
 }
 
 /* main project */
 #main-project {
   height: 100%;
   width: 40%;
-  background-color: white;
+  background-color: magenta;
   border-right: 2px solid black;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: flex-start;
 }
 
 /* main project task preview */
 .task-preview-wrap {
     background-color:pink;
-    width: 100%;
+    margin: 10px;
+    padding: 10px;
+    width: calc(100% - 40px);
     height: calc(100% - 70px);
     display: flex;
     flex-direction: column;
@@ -91,19 +93,62 @@ header {
 /* each individual message preview box */
 .task-preview-box {
     background-color: #4b81b8;
-    width: 100%;
-    height: 100px;
+    width: calc(100% - 20px);
+    padding: 10px;
     border-bottom: 1px solid black;
     display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
+    flex-direction: column;
     align-items: flex-start;
+    justify-content: space-between;
+}
+
+.deadline {
+    width: 100%;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-start;
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+.task-description {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    font-size: large;
+}
+
+.bottom-task-preview-wrap {
+    width: 100%;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.top-project-summary-wrap {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.project-name {
+    white-space: nowrap;
+    font-size: 150%;
 }
 
 /* other project summaries */
 #other-projects {
   height: 100%;
-  width: 56%;
+  width: 60%;
   margin-right: 30px;
   background-color: #86878a;
   display: flex;
@@ -113,11 +158,10 @@ header {
 }
 
 .project-summary-wrap {
-  width: calc(100% - 45px);
+  width: calc(100% - 40px);
   margin: 10px;
   padding: 10px;
   background-color: #a7b3c7;
-  border: 2px solid;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -127,12 +171,14 @@ header {
 
 /* each individual message preview box */
 .project-summary-box {
-    background-color: #4b81b8;
-    width: 100%;
+    background-color: inherit;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid;
+    width: calc(100% - 20px);
     height: 100px;
-    border: 2px solid black;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
 }
@@ -147,8 +193,6 @@ header {
 .new-task-wrap {
   width: 100%;
   height: 70px;
-  padding-left: 5px;
-  padding-right: 5px;
   margin-right; 10px;
   background-color: #ededed;
   display: flex;

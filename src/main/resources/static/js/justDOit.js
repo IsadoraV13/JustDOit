@@ -23,10 +23,11 @@ let userId = document.getElementById('user_id').value;
 //*********************************************************
 (function getMainProjectSummary() {
     let wrap = document.querySelector('#main-project-summary-wrap');
+    let taskPreview = 0;
     fetch(`users/${userId}/mainproject/projectsummary`)
         .then(res => res.json())
         .then(resObj => {
-            resObj.data.forEach(projectSummaryObj => createProjectSummary(projectSummaryObj, wrap));
+            resObj.data.forEach(projectSummaryObj => createProjectSummary(projectSummaryObj, wrap, taskPreview));
         })
         // add back to body
 //        .then(projectSummaryBox => document.querySelector('#main-project-summary-wrap').append(projectSummaryBox));
@@ -35,10 +36,11 @@ let userId = document.getElementById('user_id').value;
 
 (function getOtherProjectSummaries() {
     let wrap = document.querySelector('#other-projects-summary-wrap');
+    let taskPreview = 1;
     fetch(`users/${userId}/otherprojects/projectsummaries`)
         .then(res => res.json())
         .then(resObj => {
-            resObj.data.forEach(projectSummaryObj => createProjectSummary(projectSummaryObj, wrap));
+            resObj.data.forEach(projectSummaryObj => createProjectSummary(projectSummaryObj, wrap, taskPreview));
         })
         // add back to body
 //        .then(projectSummaryBox => document.querySelector('#other-projects-summary-wrap').append(projectSummaryBox))    ;
@@ -49,9 +51,12 @@ let userId = document.getElementById('user_id').value;
 //******************************************************
 // create each project Summary (main or other project)
 //******************************************************
-function createProjectSummary (projectSummaryObj, wrap) {
+function createProjectSummary (projectSummaryObj, wrap, taskPreview) {
     // create parent div (projectSummaryBox)
     let projectSummaryBox = document.createElement('div');
+    // create sections
+    let topWrap = document.createElement('div');
+    let midWrap = document.createElement('div');
     // create 4 children div (projectName, projectDeadline, 2 warnings, recent activity)
     // & paragraphs and add content as innerHTML
     let projectName = document.createElement('div');
@@ -61,7 +66,8 @@ function createProjectSummary (projectSummaryObj, wrap) {
 
     let projectDeadline = document.createElement('div');
     let date = document.createElement('p');
-    date.innerHTML = new Date(projectSummaryObj.projectDeadline).toLocaleDateString();
+    let options = { weekday: 'short', year: '2-digit', month: 'short', day: 'numeric' };
+    date.innerHTML = new Date(projectSummaryObj.projectDeadline).toLocaleDateString("en-GB", options);
     projectDeadline.appendChild(date);
 
     let imminentDeadlineWarning = document.createElement('div');
@@ -86,6 +92,8 @@ function createProjectSummary (projectSummaryObj, wrap) {
     imminentDeadlineWarning.classList.add("warning");
     passedDeadlineWarning.classList.add("warning");
     recentActivity.classList.add("recent-activity");
+    topWrap.classList.add("top-project-summary-wrap");
+    midWrap.classList.add("mid-project-summary-wrap");
     // set an attribute (to identify that specific project for a click listener [next])
     projectSummaryBox.setAttribute('data-task_id', projectSummaryObj.taskId);
     //projectSummaryBox.addEventListener('click', projectSummaryClick); // TODO add this
@@ -96,11 +104,21 @@ function createProjectSummary (projectSummaryObj, wrap) {
     passedDeadlineWarning.setAttribute('data-task_id', projectSummaryObj.taskId);
     recentActivity.setAttribute('data-task_id', projectSummaryObj.taskId);
     //append all children to parent div
-    projectSummaryBox.appendChild(projectName);
-    projectSummaryBox.appendChild(projectDeadline);
-    projectSummaryBox.appendChild(imminentDeadlineWarning);
-    projectSummaryBox.appendChild(passedDeadlineWarning);
-    projectSummaryBox.appendChild(recentActivity);
+    topWrap.appendChild(projectName);
+    topWrap.appendChild(projectDeadline);
+    midWrap.appendChild(imminentDeadlineWarning);
+    midWrap.appendChild(passedDeadlineWarning);
+    midWrap.appendChild(recentActivity);
+    projectSummaryBox.appendChild(topWrap);
+    projectSummaryBox.appendChild(midWrap);
+
+    if (taskPreview === 1) {
+        let bottomWrap = document.createElement('div');
+        bottomWrap.classList.add("task-preview-wrap");
+//        projectSummaryObj.taskPreviews.forEach(taskPreviewObj) => createTaskPreview(taskPreviewObj)
+        projectSummaryBox.appendChild(bottomWrap);
+    }
+
     wrap.append(projectSummaryBox);
 
 }
@@ -111,6 +129,10 @@ function createProjectSummary (projectSummaryObj, wrap) {
 function createTaskPreview (taskPreviewObj) {
     // create parent div (taskPreviewBox)
     let taskPreviewBox = document.createElement('div');
+    // create sections
+//    let topWrap = document.createElement('div');
+//    let midWrap = document.createElement('div');
+    let bottomWrap = document.createElement('div');
     // create 4 children div (description, Owner, deadline, priority)
     // & paragraphs and add content as innerHTML
     let taskDescription = document.createElement('div');
@@ -118,15 +140,16 @@ function createTaskPreview (taskPreviewObj) {
     description.innerHTML = taskPreviewObj.taskDescription; //TODO ******* check
     taskDescription.appendChild(description);
 
+    let taskDeadline = document.createElement('div');
+    let date = document.createElement('p');
+    let options = { weekday: 'short', year: '2-digit', month: 'short', day: 'numeric' };
+    date.innerHTML = new Date(taskPreviewObj.taskDeadline).toLocaleDateString("en-GB", options);
+    taskDeadline.appendChild(date);
+
     let taskOwner = document.createElement('div');
     let owner = document.createElement('p');
     owner.innerHTML = taskPreviewObj.taskOwner;
     taskOwner.appendChild(owner);
-
-    let taskDeadline = document.createElement('div');
-    let date = document.createElement('p');
-    date.innerHTML = new Date(taskPreviewObj.taskDeadline).toLocaleDateString();
-    taskDeadline.appendChild(date);
 
     let taskPriority = document.createElement('div');
     let priority = document.createElement('p');
@@ -136,22 +159,28 @@ function createTaskPreview (taskPreviewObj) {
     // add class
     taskPreviewBox.classList.add("task-preview-box");
     taskDescription.classList.add("task-description");
-    taskOwner.classList.add("task-owner");
     taskDeadline.classList.add("deadline");
+    taskOwner.classList.add("task-owner");
     taskPriority.classList.add("task-priority");
+//    topWrap.classList.add("top-wrap");
+//    midWrap.classList.add("mid-wrap");
+    bottomWrap.classList.add("bottom-task-preview-wrap");
     // set an attribute (to identify that specific task for a click listener [next])
     taskPreviewBox.setAttribute('data-task_id', taskPreviewObj.taskId);
     taskPreviewBox.addEventListener('click', taskPreviewClick);
     // also add the attribute to all children // TODO is this needed on every element??
     taskDescription.setAttribute('data-task_id', taskPreviewObj.taskId);
-    taskOwner.setAttribute('data-task_id', taskPreviewObj.taskId);
     taskDeadline.setAttribute('data-task_id', taskPreviewObj.taskId);
+    taskOwner.setAttribute('data-task_id', taskPreviewObj.taskId);
     taskPriority.setAttribute('data-task_id', taskPreviewObj.taskId);
     //append all children to parent div
-    taskPreviewBox.appendChild(taskDescription);
-    taskPreviewBox.appendChild(taskOwner);
+//    topWrap.appendChild(taskDeadline);
+//    midWrap.appendChild(taskDescription);
+    bottomWrap.appendChild(taskOwner);
+    bottomWrap.appendChild(taskPriority);
     taskPreviewBox.appendChild(taskDeadline);
-    taskPreviewBox.appendChild(taskPriority);
+    taskPreviewBox.appendChild(taskDescription);
+    taskPreviewBox.appendChild(bottomWrap);
     // add back to body
     document.querySelector('.task-preview-wrap').appendChild(taskPreviewBox);
 }

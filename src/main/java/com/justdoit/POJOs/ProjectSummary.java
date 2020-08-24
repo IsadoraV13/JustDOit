@@ -1,6 +1,7 @@
 package com.justdoit.POJOs;
 
 import java.util.Date;
+import java.util.List;
 
 public class ProjectSummary {
     private String projectName;
@@ -8,6 +9,7 @@ public class ProjectSummary {
     private String imminentDeadlineWarning;
     private String passedDeadlineWarning;
     private String recentActivity; // will need a method to pull together text
+    private List<TaskPreview> taskPreviews;
 
     public String getProjectName() {
         return projectName;
@@ -49,4 +51,11 @@ public class ProjectSummary {
         this.recentActivity = recentActivity;
     }
 
+    public List<TaskPreview> getTaskPreviews() {
+        return taskPreviews;
+    }
+
+    public void setTaskPreviews(List<TaskPreview> taskPreviews) {
+        this.taskPreviews = taskPreviews;
+    }
 }

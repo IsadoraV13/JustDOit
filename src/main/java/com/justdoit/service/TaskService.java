@@ -43,9 +43,8 @@ public class TaskService {
         return taskRepo.save(newTask);
     }
 
-    public List<TaskPreview> listTaskPreviews(int userId) {
+    public List<TaskPreview> listTaskPreviews(int projectId, int userId) {
         User user = userService.listByUserId(userId);
-        int projectId = user.getMainProjectId();
         List<TaskPreview> taskPreviews = new ArrayList<>();
         List<Task> tasks = listTaskByProjectId(projectId);
         for (Task task : tasks) {
