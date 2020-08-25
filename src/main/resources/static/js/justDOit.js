@@ -8,18 +8,18 @@ let userId = document.getElementById('user_id').value;
 //*************************************************
 // runs asynchronously as soon as page is loaded (takes time to convert the readable stream to Json)
 // in the meantime, other things can load on the page
-(function getTaskPreviews() {
-    fetch(`users/${userId}/mainproject/taskpreviews`)
-        .then(res => res.json())  // fetching url returns a response, which is converted to json
-        .then(resObj => { // json response has a body object with a data property and under that
-                    // an array of taskPreview objects
-            resObj.data.forEach(taskPreviewObj => createTaskPreview(taskPreviewObj));
-            // for each taskPreview obj, create a preview box using the createTaskPreview function (further down)
-        })
-})();
+//(function getTaskPreviews() {
+//    fetch(`users/${userId}/mainproject/taskpreviews`)
+//        .then(res => res.json())  // fetching url returns a response, which is converted to json
+//        .then(resObj => { // json response has a body object with a data property and under that
+//                    // an array of taskPreview objects
+//            resObj.data.forEach(taskPreviewObj => createTaskPreview(taskPreviewObj));
+//            // for each taskPreview obj, create a preview box using the createTaskPreview function (further down)
+//        })
+//})();
 
 //*********************************************************
-// fetch ProjectSummaries (main or other project)
+// fetch ProjectSummaries
 //*********************************************************
 (function getMainProjectSummary() {
     let wrap = document.querySelector('#main-project-summary-wrap');
@@ -27,7 +27,7 @@ let userId = document.getElementById('user_id').value;
     fetch(`users/${userId}/mainproject/projectsummary`)
         .then(res => res.json())
         .then(resObj => {
-            resObj.data.forEach(projectSummaryObj => createProjectSummary(projectSummaryObj, wrap, taskPreview));
+            resObj.data.forEach(projectSummaryObj => createProjectSummary(projectSummaryObj, wrap));
         })
         // add back to body
 //        .then(projectSummaryBox => document.querySelector('#main-project-summary-wrap').append(projectSummaryBox));
@@ -40,7 +40,7 @@ let userId = document.getElementById('user_id').value;
     fetch(`users/${userId}/otherprojects/projectsummaries`)
         .then(res => res.json())
         .then(resObj => {
-            resObj.data.forEach(projectSummaryObj => createProjectSummary(projectSummaryObj, wrap, taskPreview));
+            resObj.data.forEach(projectSummaryObj => createProjectSummary(projectSummaryObj, wrap));
         })
         // add back to body
 //        .then(projectSummaryBox => document.querySelector('#other-projects-summary-wrap').append(projectSummaryBox))    ;
@@ -51,12 +51,13 @@ let userId = document.getElementById('user_id').value;
 //******************************************************
 // create each project Summary (main or other project)
 //******************************************************
-function createProjectSummary (projectSummaryObj, wrap, taskPreview) {
+function createProjectSummary (projectSummaryObj, wrap) {
     // create parent div (projectSummaryBox)
     let projectSummaryBox = document.createElement('div');
     // create sections
     let topWrap = document.createElement('div');
     let midWrap = document.createElement('div');
+    let bottomWrap = document.createElement('div');
     // create 4 children div (projectName, projectDeadline, 2 warnings, recent activity)
     // & paragraphs and add content as innerHTML
     let projectName = document.createElement('div');
@@ -70,55 +71,83 @@ function createProjectSummary (projectSummaryObj, wrap, taskPreview) {
     date.innerHTML = new Date(projectSummaryObj.projectDeadline).toLocaleDateString("en-GB", options);
     projectDeadline.appendChild(date);
 
-    let imminentDeadlineWarning = document.createElement('div');
-    let imminentWarning = document.createElement('p');
-    imminentWarning.innerHTML = projectSummaryObj.imminentDeadlineWarning;
-    imminentDeadlineWarning.appendChild(imminentWarning);
+    if (projectSummaryObj.imminentDeadlineWarning !== null) {
+        let imminentDeadlineWarning = document.createElement('div');
+        // add warning icon
+        let warningIcon = document.createElement('div');
+        warningIcon.classList.add("bigger-icon-wrap");
+        let img = document.createElement('img');
+        img.setAttribute("src", "./images/attention.png");
+        img.setAttribute("alt", "warning icon");
+        warningIcon.appendChild(img);
+        imminentDeadlineWarning.appendChild(warningIcon);
+        // add warning message
+        let imminentWarning = document.createElement('p');
+        imminentWarning.innerHTML = projectSummaryObj.imminentDeadlineWarning;
+        imminentWarning.classList.add("imminent-warning-msg")
+        imminentDeadlineWarning.appendChild(imminentWarning);
+        // add classes, attributes and append
+        imminentDeadlineWarning.classList.add("warning");
+        imminentDeadlineWarning.setAttribute('data-task_id', projectSummaryObj.taskId);
+        midWrap.appendChild(imminentDeadlineWarning);
+    }
 
-    let passedDeadlineWarning = document.createElement('div');
-    let passedWarning = document.createElement('p');
-    passedWarning.innerHTML = projectSummaryObj.passedDeadlineWarning;
-    passedDeadlineWarning.appendChild(passedWarning);
+    if (projectSummaryObj.passedDeadlineWarning !== null) {
+        let passedDeadlineWarning = document.createElement('div');
+        // add warning icon
+        let warningIcon = document.createElement('div');
+        warningIcon.classList.add("smaller-icon-wrap");
+        let img = document.createElement('img');
+        img.setAttribute("src", "./images/warning.png");
+        img.setAttribute("alt", "warning icon");
+        warningIcon.appendChild(img);
+        passedDeadlineWarning.appendChild(warningIcon);
+        // add warning message
+        let passedWarning = document.createElement('p');
+        passedWarning.innerHTML = projectSummaryObj.passedDeadlineWarning;
+        passedWarning.classList.add("passed-warning-msg")
+        passedDeadlineWarning.appendChild(passedWarning);
+        // add classes, attributes and append
+        passedDeadlineWarning.classList.add("warning");
+        passedDeadlineWarning.setAttribute('data-task_id', projectSummaryObj.taskId);
+        midWrap.appendChild(passedDeadlineWarning);
+    }
 
-    let recentActivity = document.createElement('div');
-    let activity = document.createElement('p');
-    activity.innerHTML = projectSummaryObj.recentActivity;
-    recentActivity.appendChild(activity);
+    if (projectSummaryObj.recentActivity !== null) {
+        let recentActivity = document.createElement('div');
+        // add activity message
+        let activity = document.createElement('p');
+        activity.innerHTML = projectSummaryObj.recentActivity;
+        recentActivity.appendChild(activity);
+        // add classes, attributes and append
+        recentActivity.classList.add("recent-activity");
+        recentActivity.setAttribute('data-task_id', projectSummaryObj.taskId);
+        midWrap.appendChild(recentActivity);
+    }
 
     // add class
     projectSummaryBox.classList.add("project-summary-box");
     projectName.classList.add("project-name");
     projectDeadline.classList.add("deadline");
-    imminentDeadlineWarning.classList.add("warning");
-    passedDeadlineWarning.classList.add("warning");
-    recentActivity.classList.add("recent-activity");
     topWrap.classList.add("top-project-summary-wrap");
     midWrap.classList.add("mid-project-summary-wrap");
+    bottomWrap.classList.add("task-preview-wrap");
     // set an attribute (to identify that specific project for a click listener [next])
     projectSummaryBox.setAttribute('data-task_id', projectSummaryObj.taskId);
     //projectSummaryBox.addEventListener('click', projectSummaryClick); // TODO add this
     // also add the attribute to all children // TODO is this needed on every element??
     projectName.setAttribute('data-task_id', projectSummaryObj.taskId);
     projectDeadline.setAttribute('data-task_id', projectSummaryObj.taskId);
-    imminentDeadlineWarning.setAttribute('data-task_id', projectSummaryObj.taskId);
-    passedDeadlineWarning.setAttribute('data-task_id', projectSummaryObj.taskId);
-    recentActivity.setAttribute('data-task_id', projectSummaryObj.taskId);
     //append all children to parent div
     topWrap.appendChild(projectName);
     topWrap.appendChild(projectDeadline);
-    midWrap.appendChild(imminentDeadlineWarning);
-    midWrap.appendChild(passedDeadlineWarning);
-    midWrap.appendChild(recentActivity);
     projectSummaryBox.appendChild(topWrap);
     projectSummaryBox.appendChild(midWrap);
+    projectSummaryBox.appendChild(bottomWrap);
 
-    if (taskPreview === 1) {
-        let bottomWrap = document.createElement('div');
-        bottomWrap.classList.add("task-preview-wrap");
-//        projectSummaryObj.taskPreviews.forEach(taskPreviewObj) => createTaskPreview(taskPreviewObj)
-        projectSummaryBox.appendChild(bottomWrap);
+    if (projectSummaryObj.taskPreviews !== null) {
+        projectSummaryObj.taskPreviews.forEach(taskPreviewObj => createTaskPreview(taskPreviewObj));
     }
-
     wrap.append(projectSummaryBox);
 
 }
@@ -126,13 +155,9 @@ function createProjectSummary (projectSummaryObj, wrap, taskPreview) {
 //**********************************************
 // create each task preview (from main project)
 //**********************************************
-function createTaskPreview (taskPreviewObj) {
+function createTaskPreview(taskPreviewObj) {
     // create parent div (taskPreviewBox)
     let taskPreviewBox = document.createElement('div');
-    // create sections
-//    let topWrap = document.createElement('div');
-//    let midWrap = document.createElement('div');
-    let bottomWrap = document.createElement('div');
     // create 4 children div (description, Owner, deadline, priority)
     // & paragraphs and add content as innerHTML
     let taskDescription = document.createElement('div');
@@ -156,14 +181,16 @@ function createTaskPreview (taskPreviewObj) {
     priority.innerHTML = taskPreviewObj.taskPriority;
     taskPriority.appendChild(priority);
 
+    // create wrap for name and priority
+    let bottomWrap = document.createElement('div');
+    bottomWrap.appendChild(taskOwner);
+    bottomWrap.appendChild(taskPriority);
+
     // add class
     taskPreviewBox.classList.add("task-preview-box");
     taskDescription.classList.add("task-description");
     taskDeadline.classList.add("deadline");
     taskOwner.classList.add("task-owner");
-    taskPriority.classList.add("task-priority");
-//    topWrap.classList.add("top-wrap");
-//    midWrap.classList.add("mid-wrap");
     bottomWrap.classList.add("bottom-task-preview-wrap");
     // set an attribute (to identify that specific task for a click listener [next])
     taskPreviewBox.setAttribute('data-task_id', taskPreviewObj.taskId);
@@ -173,16 +200,13 @@ function createTaskPreview (taskPreviewObj) {
     taskDeadline.setAttribute('data-task_id', taskPreviewObj.taskId);
     taskOwner.setAttribute('data-task_id', taskPreviewObj.taskId);
     taskPriority.setAttribute('data-task_id', taskPreviewObj.taskId);
+
     //append all children to parent div
-//    topWrap.appendChild(taskDeadline);
-//    midWrap.appendChild(taskDescription);
-    bottomWrap.appendChild(taskOwner);
-    bottomWrap.appendChild(taskPriority);
     taskPreviewBox.appendChild(taskDeadline);
     taskPreviewBox.appendChild(taskDescription);
     taskPreviewBox.appendChild(bottomWrap);
     // add back to body
-    document.querySelector('.task-preview-wrap').appendChild(taskPreviewBox);
+    document.querySelector('.task-preview-wrap').append(taskPreviewBox);
 }
 
 //************************************************************

@@ -17,7 +17,7 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Query(value = "SELECT firstName FROM user WHERE userId = ?1", nativeQuery = true)
     String findTaskOwnerNameByTaskOwnerUserId(int userId);
 
-    @Query(value = "SELECT * FROM task WHERE projectId = ?1 ORDER BY taskDeadline DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM task WHERE projectId = ?1 ORDER BY taskDeadline ASC", nativeQuery = true)
     List<Task> findTasksByProjectId(int projectId);
 
 }

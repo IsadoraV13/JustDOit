@@ -9,7 +9,7 @@ body {
   margin: 0;
   padding: 0;
 }
-/* top banner */
+
 header {
   height: 75px;
   width: 100vw;
@@ -53,143 +53,27 @@ header {
   color: white;
 }
 
-
-/* main content */
 .main-horizontal-content {
-  width: 100vw;
-  height: calc(100vh - 75px);
+  width: 100%;
+  height: calc(100% - 75px);
   border: 2px solid black;
   display: flex;
   justify-content: space-between;
   background-color: white;
 }
 
-/* main project */
 #main-project {
   height: 100%;
   width: 40%;
-  background-color: magenta;
-  border-right: 2px solid black;
+  background-color: #c7d9f2;
+  border-right: 2px solid #95baed;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-}
-
-/* main project task preview */
-.task-preview-wrap {
-    background-color:pink;
-    margin: 10px;
-    padding: 10px;
-    width: calc(100% - 40px);
-    height: calc(100% - 70px);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    overflow-y: scroll;
-}
-
-/* each individual message preview box */
-.task-preview-box {
-    background-color: #4b81b8;
-    width: calc(100% - 20px);
-    padding: 10px;
-    border-bottom: 1px solid black;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-between;
-}
-
-.deadline {
-    width: 100%;
-    height: 30px;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: flex-start;
-    white-space: nowrap;
-    font-weight: bold;
-}
-
-.task-description {
-    width: 100%;
-    height: 50px;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    font-size: large;
-}
-
-.bottom-task-preview-wrap {
-    width: 100%;
-    height: 30px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.top-project-summary-wrap {
-    width: 100%;
-    height: 50px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.project-name {
-    white-space: nowrap;
-    font-size: 150%;
-}
-
-/* other project summaries */
-#other-projects {
-  height: 100%;
-  width: 60%;
-  margin-right: 30px;
-  background-color: #86878a;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
   overflow-y: scroll;
 }
 
-.project-summary-wrap {
-  width: calc(100% - 40px);
-  margin: 10px;
-  padding: 10px;
-  background-color: #a7b3c7;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  overflow-y: scroll;
-}
-
-/* each individual message preview box */
-.project-summary-box {
-    background-color: inherit;
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid;
-    width: calc(100% - 20px);
-    height: 100px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-}
-
-.img-wrap > img {
-  width: 49px;
-  height: 49px;
-  border-radius: 50%;
-}
-
-/* new task */
 .new-task-wrap {
   width: 100%;
   height: 70px;
@@ -217,6 +101,147 @@ input[name="message"] {
   border: none;
   font-size: 14px;
   height: 90%; /* line-height is like line spacing for text based elements */
+}
+
+#other-projects {
+  height: 100%;
+  width: 60%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: scroll;
+}
+
+.task-preview-wrap {
+    background-color:inherit;
+    flex-grow: 10;
+    padding: 20px;
+    width: calc(100% - 30px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-y: scroll;
+}
+
+/* each individual preview box  #d5dfed*/
+.task-preview-box {
+    background-color:  #e4e8ed;
+    width: calc(100% - 33px);
+    padding: 10px;
+    border-bottom: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.task-description {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    font-size: large;
+}
+
+.bottom-task-preview-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.project-summary-wrap {
+  width: calc(100% - 30px);
+  padding: 20px;
+  background-color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  overflow-y: scroll;
+}
+
+/* each individual summary box #a7b3c7*/
+.project-summary-box {
+    background-color: #a1b0c7;
+    margin-bottom: 20px;
+    padding: 10px;
+    width: calc(100% - 33px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.top-project-summary-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.project-name {
+    white-space: nowrap;
+    font-size: 150%;
+}
+
+.mid-project-summary-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.passed-warning-msg {
+    color: #c74630;
+}
+
+.imminent-warning-msg {
+    color: #c77130;
+}
+
+.smaller-icon-wrap > img {
+  width: 20px;
+  height: 20px;
+
+  margin-top: 2px;
+  margin-right: 5px;
+}
+
+.bigger-icon-wrap > img {
+  width: 21px;
+  height: 21px;
+  margin-top: 2px;
+  margin-right: 3px;
+}
+
+/* Common across the page */
+.warning {
+    display: flex;
+    height: 25px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.deadline {
+    width: 100%;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-start;
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+.img-wrap > img {
+  width: 49px;
+  height: 49px;
+  border-radius: 50%;
 }
 
 .svg-wrap {
