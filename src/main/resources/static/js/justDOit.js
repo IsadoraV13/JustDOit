@@ -61,9 +61,10 @@ function createProjectSummary (projectSummaryObj, wrap) {
     // create 4 children div (projectName, projectDeadline, 2 warnings, recent activity)
     // & paragraphs and add content as innerHTML
     let projectName = document.createElement('div');
-    let name = document.createElement('p');
-    name.innerHTML = projectSummaryObj.projectName;
-    projectName.appendChild(name);
+    projectName.append(projectSummaryObj.projectName);
+//    let name = document.createElement('p');
+//    name.innerHTML = projectSummaryObj.projectName;
+//    projectName.appendChild(name);
 
     let projectDeadline = document.createElement('div');
     let date = document.createElement('p');
@@ -132,6 +133,7 @@ function createProjectSummary (projectSummaryObj, wrap) {
     topWrap.classList.add("top-project-summary-wrap");
     midWrap.classList.add("mid-project-summary-wrap");
     bottomWrap.classList.add("task-preview-wrap");
+    bottomWrap.setAttribute("id", `${projectSummaryObj.projectName}` + "-task-preview-wrap");
     // set an attribute (to identify that specific project for a click listener [next])
     projectSummaryBox.setAttribute('data-task_id', projectSummaryObj.taskId);
     //projectSummaryBox.addEventListener('click', projectSummaryClick); // TODO add this
@@ -144,18 +146,19 @@ function createProjectSummary (projectSummaryObj, wrap) {
     projectSummaryBox.appendChild(topWrap);
     projectSummaryBox.appendChild(midWrap);
     projectSummaryBox.appendChild(bottomWrap);
+    console.log(projectSummaryObj.taskPreviews);
+    wrap.appendChild(projectSummaryBox);
+
 
     if (projectSummaryObj.taskPreviews !== null) {
-        projectSummaryObj.taskPreviews.forEach(taskPreviewObj => createTaskPreview(taskPreviewObj));
+        projectSummaryObj.taskPreviews.forEach(taskPreviewObj => createTaskPreview(taskPreviewObj, projectSummaryObj.projectName));
     }
-    wrap.append(projectSummaryBox);
-
 }
 
 //**********************************************
 // create each task preview (from main project)
 //**********************************************
-function createTaskPreview(taskPreviewObj) {
+function createTaskPreview(taskPreviewObj, projectName) {
     // create parent div (taskPreviewBox)
     let taskPreviewBox = document.createElement('div');
     // create 4 children div (description, Owner, deadline, priority)
@@ -206,7 +209,9 @@ function createTaskPreview(taskPreviewObj) {
     taskPreviewBox.appendChild(taskDescription);
     taskPreviewBox.appendChild(bottomWrap);
     // add back to body
-    document.querySelector('.task-preview-wrap').append(taskPreviewBox);
+    let selector = `${projectName}-task-preview-wrap`;
+    console.log(selector);
+    document.getElementById(selector).appendChild(taskPreviewBox);
 }
 
 //************************************************************
