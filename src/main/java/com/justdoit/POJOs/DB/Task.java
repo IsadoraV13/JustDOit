@@ -52,8 +52,8 @@ public class Task {
     private Boolean taskCompleteNotificationOn;
     @Column(columnDefinition = "boolean default 1")
     private Boolean taskAddedNotificationOn;
+    @Column(columnDefinition = "varchar(255) default 'Medium'")
     private String taskPriority;
-    private String photoUrl;
 
 
     public Task() {
@@ -172,11 +172,4 @@ public class Task {
         this.taskPriority = taskPriority;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
-    }
-
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
-    }
 }

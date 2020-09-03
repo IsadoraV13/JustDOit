@@ -3,13 +3,23 @@ package com.justdoit.POJOs;
 import java.util.Date;
 
 public class TaskPreview {
+    private int taskId;
     private String taskDescription;
     private String taskOwner;
     private Date taskDeadline;
     private String taskPriority;
+    private String profilePicUrl;
 
     public String getTaskDescription() {
         return taskDescription;
+    }
+
+    public int getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
     }
 
     public void setTaskDescription(String taskDescription) {
@@ -38,5 +48,13 @@ public class TaskPreview {
 
     public void setTaskPriority(String taskPriority) {
         this.taskPriority = taskPriority;
+    }
+
+    public String getProfilePicUrl() {
+        return profilePicUrl;
+    }
+
+    public void setProfilePicUrl(String profilePicUrl) {
+        this.profilePicUrl = profilePicUrl;
     }
 }

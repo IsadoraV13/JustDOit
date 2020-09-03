@@ -67,7 +67,7 @@ public class UserController {
         return res;
     }
 
-    // works
+    // TODO *** remove??
     @GetMapping("/{userId}/mainproject/taskpreviews")
     // return all task info related to this projectId
     public ResponseObject<List<TaskPreview>> viewMainProjectTaskPreviews(@PathVariable(value="userId")int userId) {

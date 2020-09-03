@@ -41,6 +41,14 @@ public class TaskController {
         return res;
     }
 
+    @GetMapping("/{taskId}/complete")
+    // mark task Complete @RequestBody Map<String, Object> fields
+    public ResponseObject<Task> markTaskComplete(@PathVariable(value="taskId")int taskId) {
+        ResponseObject<Task> res = new ResponseObject();
+        res.setData(taskService.markTaskComplete(taskId));
+        return res;
+    }
+
     @DeleteMapping("/{taskId}")
     public void deleteTask(@PathVariable(value="taskId")int taskId) throws ObjectNotFoundException {
         taskService.deleteTask(taskId);

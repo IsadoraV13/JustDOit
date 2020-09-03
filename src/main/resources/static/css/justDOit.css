@@ -62,7 +62,7 @@ header {
   background-color: white;
 }
 
-#main-project {
+#other-projects {
   height: 100%;
   width: 40%;
   background-color: #c7d9f2;
@@ -74,36 +74,7 @@ header {
   overflow-y: scroll;
 }
 
-.new-task-wrap {
-  width: 100%;
-  height: 70px;
-  margin-right; 10px;
-  background-color: #ededed;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.form-wrap {
-  width: 80%;
-  height: 60%;
-  background-color: white;
-}
-
-.form-wrap form {
-  width: 100%;
-  height: 100%;
-}
-
-input[name="message"] {
-  width: 90%;
-  margin-left: 3%;
-  border: none;
-  font-size: 14px;
-  height: 90%; /* line-height is like line spacing for text based elements */
-}
-
-#other-projects {
+#main-project {
   height: 100%;
   width: 60%;
   background-color: white;
@@ -122,7 +93,7 @@ input[name="message"] {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-
+    overflow-y: scroll;
 }
 
 /* each individual preview box  #d5dfed*/
@@ -135,14 +106,35 @@ input[name="message"] {
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
+    flex-shrink: 3;
 }
 
-.task-description {
-    width: 100%;
+.task-box {
+    background-color:  #e4e8ed;
+    width: calc(100% - 33px);
+    padding: 10px;
+    border-bottom: 1px solid black;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
+    justify-content: space-between;
+}
+
+.task-description {
     font-size: large;
+}
+
+.deadline {
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+.top-task-preview-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
 }
 
 .bottom-task-preview-wrap {
@@ -153,6 +145,21 @@ input[name="message"] {
     align-items: flex-start;
 }
 
+.task-owner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-style: italic;
+}
+
+.task-description {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .project-summary-wrap {
   width: calc(100% - 30px);
   padding: 20px;
@@ -161,7 +168,7 @@ input[name="message"] {
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  overflow-y: scroll;
+
 }
 
 /* each individual summary box #a7b3c7*/
@@ -196,14 +203,36 @@ input[name="message"] {
     align-items: flex-start;
 }
 
-.passed-warning-msg {
-    color: #c74630;
+.new-task-wrap {
+  width: 100%;
+  height: 70px;
+  margin-right; 10px;
+  background-color: #ededed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.imminent-warning-msg {
-    color: #c77130;
+.form-wrap {
+  width: 80%;
+  height: 60%;
+  background-color: white;
 }
 
+.form-wrap form {
+  width: 100%;
+  height: 100%;
+}
+
+input[name="message"] {
+  width: 90%;
+  margin-left: 3%;
+  border: none;
+  font-size: 14px;
+  height: 90%; /* line-height is like line spacing for text based elements */
+}
+
+/* Common across the page */
 .smaller-icon-wrap > img {
   width: 20px;
   height: 20px;
@@ -219,7 +248,6 @@ input[name="message"] {
   margin-right: 3px;
 }
 
-/* Common across the page */
 .warning {
     display: flex;
     height: 25px;
@@ -227,26 +255,46 @@ input[name="message"] {
     align-items: center;
 }
 
-.deadline {
-    width: 100%;
-    height: 30px;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: flex-start;
-    white-space: nowrap;
-    font-weight: bold;
+.passed-warning-msg {
+    color: #c74630;
+}
+
+.imminent-warning-msg {
+    color: #c77130;
 }
 
 .img-wrap > img {
-  width: 49px;
-  height: 49px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
+  padding-right: 5px;
+}
+
+.icon-wrap > img {
+  width: 40px;
+  height: 40px;
+  opacity: 0.3;
+}
+
+.icon-wrap > img:hover {
+  opacity: 1.0;
 }
 
 .svg-wrap {
   border: none;
   background-color: #ededed;
+}
+
+.low-priority {
+    background-color: #5a7d68;
+}
+
+.amber-task {
+    color: #e87720; /* #ccaa43 */
+}
+
+.red-task {
+    color: red; /*  #cc5843 */
 }
 
 #logIn-signUp {

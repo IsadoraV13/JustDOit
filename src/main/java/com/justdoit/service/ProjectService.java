@@ -58,7 +58,7 @@ public class ProjectService {
             if (task.getIsComplete() == false) {
                 Date deadlineDate = new Date(task.getTaskDeadline().getTime());
                 long timeLeft = DAYS.between(LocalDate.now(), deadlineDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-                if (timeLeft <= 1 && timeLeft >= 0)
+                if (timeLeft <= 2 && timeLeft >= 0)
                     imminent++;
                 if (timeLeft < 0)
                     passed++;
@@ -95,7 +95,7 @@ public class ProjectService {
             List<Integer> warnings = listImminentTaskDeadlineWarning(projectId);
             // TODO check that this works for all scenarios
             if (warnings.get(0) > 0)
-                ps.setImminentDeadlineWarning("This project has 1 or more tasks about to miss a deadline");
+                ps.setImminentDeadlineWarning("This project has 1 or more tasks with an imminent deadline");
             if (warnings.get(1) > 0)
                 ps.setPassedDeadlineWarning("This project has 1 or more tasks with a missed deadline");
             ps.setTaskPreviews(taskService.listTaskPreviews(projectId, userId));

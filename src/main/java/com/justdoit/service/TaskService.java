@@ -43,25 +43,35 @@ public class TaskService {
         return taskRepo.save(newTask);
     }
 
+
+    public void deleteTask(int taskId) {
+        taskRepo.deleteByTaskId(taskId);
+    }
+
     public List<TaskPreview> listTaskPreviews(int projectId, int userId) {
         User user = userService.listByUserId(userId);
         List<TaskPreview> taskPreviews = new ArrayList<>();
         List<Task> tasks = listTaskByProjectId(projectId);
         for (Task task : tasks) {
             // for each task, create a new TaskPreview object and set its attributes based on that task
-            TaskPreview tp = new TaskPreview();
-            tp.setTaskDescription(task.getTaskDescription());
-            tp.setTaskDeadline(task.getTaskDeadline());
-            tp.setTaskOwner(taskRepo.findTaskOwnerNameByTaskOwnerUserId(task.getTaskOwnerUserId()));
-            tp.setTaskPriority(task.getTaskPriority());
-            taskPreviews.add(tp);
+            if (task.getIsComplete() == false) {
+                TaskPreview tp = new TaskPreview();
+                tp.setTaskId(task.getTaskId());
+                tp.setTaskDescription(task.getTaskDescription());
+                tp.setTaskDeadline(task.getTaskDeadline());
+                tp.setTaskOwner(taskRepo.findTaskOwnerNameByTaskOwnerUserId(task.getTaskOwnerUserId()));
+                tp.setTaskPriority(task.getTaskPriority());
+                tp.setProfilePicUrl(userService.listByUserId(task.getTaskOwnerUserId()).getProfilePicUrl());
+                taskPreviews.add(tp);
+            }
         }
         return taskPreviews;
     }
 
-    public void deleteTask(int taskId) {
-        taskRepo.deleteByTaskId(taskId);
+    public Task markTaskComplete(int taskId) {
+        Task task = listByTaskId(taskId);
+        task.setIsComplete(true);
+        taskRepo.saveAndFlush(task);
+        return task;
     }
-
-
 }

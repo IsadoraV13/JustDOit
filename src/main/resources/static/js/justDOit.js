@@ -23,11 +23,11 @@ let userId = document.getElementById('user_id').value;
 //*********************************************************
 (function getMainProjectSummary() {
     let wrap = document.querySelector('#main-project-summary-wrap');
-    let taskPreview = 0;
+    let taskPreviewIndicator = 0;
     fetch(`users/${userId}/mainproject/projectsummary`)
         .then(res => res.json())
         .then(resObj => {
-            resObj.data.forEach(projectSummaryObj => createProjectSummary(projectSummaryObj, wrap));
+            resObj.data.forEach(projectSummaryObj => createProjectSummary(projectSummaryObj, wrap, taskPreviewIndicator));
         })
         // add back to body
 //        .then(projectSummaryBox => document.querySelector('#main-project-summary-wrap').append(projectSummaryBox));
@@ -36,11 +36,11 @@ let userId = document.getElementById('user_id').value;
 
 (function getOtherProjectSummaries() {
     let wrap = document.querySelector('#other-projects-summary-wrap');
-    let taskPreview = 1;
+    let taskPreviewIndicator = 1;
     fetch(`users/${userId}/otherprojects/projectsummaries`)
         .then(res => res.json())
         .then(resObj => {
-            resObj.data.forEach(projectSummaryObj => createProjectSummary(projectSummaryObj, wrap));
+            resObj.data.forEach(projectSummaryObj => createProjectSummary(projectSummaryObj, wrap, taskPreviewIndicator));
         })
         // add back to body
 //        .then(projectSummaryBox => document.querySelector('#other-projects-summary-wrap').append(projectSummaryBox))    ;
@@ -51,7 +51,7 @@ let userId = document.getElementById('user_id').value;
 //******************************************************
 // create each project Summary (main or other project)
 //******************************************************
-function createProjectSummary (projectSummaryObj, wrap) {
+function createProjectSummary (projectSummaryObj, wrap, taskPreviewIndicator) {
     // create parent div (projectSummaryBox)
     let projectSummaryBox = document.createElement('div');
     // create sections
@@ -61,10 +61,9 @@ function createProjectSummary (projectSummaryObj, wrap) {
     // create 4 children div (projectName, projectDeadline, 2 warnings, recent activity)
     // & paragraphs and add content as innerHTML
     let projectName = document.createElement('div');
-    projectName.append(projectSummaryObj.projectName);
-//    let name = document.createElement('p');
-//    name.innerHTML = projectSummaryObj.projectName;
-//    projectName.appendChild(name);
+    let name = document.createElement('p');
+    name.innerHTML = projectSummaryObj.projectName;
+    projectName.appendChild(name);
 
     let projectDeadline = document.createElement('div');
     let date = document.createElement('p');
@@ -146,14 +145,61 @@ function createProjectSummary (projectSummaryObj, wrap) {
     projectSummaryBox.appendChild(topWrap);
     projectSummaryBox.appendChild(midWrap);
     projectSummaryBox.appendChild(bottomWrap);
-    console.log(projectSummaryObj.taskPreviews);
     wrap.appendChild(projectSummaryBox);
 
-
-    if (projectSummaryObj.taskPreviews !== null) {
+    if (taskPreviewIndicator === 0 && projectSummaryObj.taskPreviews !== null ) {
         projectSummaryObj.taskPreviews.forEach(taskPreviewObj => createTaskPreview(taskPreviewObj, projectSummaryObj.projectName));
     }
+
+    if (taskPreviewIndicator === 1 && projectSummaryObj.taskPreviews !== null ) {
+        projectSummaryObj.taskPreviews.forEach(taskPreviewObj => createTaskList(taskPreviewObj, projectSummaryObj.projectName));
+    }
 }
+
+//**********************************************
+// create task list (other projects)
+//**********************************************
+function createTaskList(taskPreviewObj, projectName) {
+    // create parent div (taskPreviewBox)
+    let taskBox = document.createElement('div');
+    taskBox.classList.add("task-box");
+
+
+//    if (taskPreviewObj.taskPriority === "High") {
+//        taskBox.classList.add("high-priority")
+//    } else if (taskPreviewObj.taskPriority === "Low") {
+//    taskBox.classList.add("low-priority")
+//    } else {
+//    taskBox.classList.add("medium-priority")
+//    }
+
+    let taskName = document.createElement('p');
+    taskName.innerHTML = taskPreviewObj.taskDescription;
+    taskName.classList.add("task-name");
+    taskBox.appendChild(taskName);
+
+    let taskDeadline = document.createElement('div');
+    let date = document.createElement('p');
+    let options = { weekday: 'short', year: '2-digit', month: 'short', day: 'numeric' };
+    date.innerHTML = new Date(taskPreviewObj.taskDeadline).toLocaleDateString("en-GB", options);
+    taskDeadline.appendChild(date);
+    taskDeadline.classList.add("deadline");
+    taskBox.appendChild(taskDeadline);
+    let today = new Date();
+    let deadline = new Date(taskPreviewObj.taskDeadline);
+    const diffDays = (deadline - today)/1000/60/60/24;
+    if (diffDays <= -1) {
+        taskDeadline.classList.add("red-task")
+    }
+    if (-1 < diffDays && diffDays < 1) {
+        taskDeadline.classList.add("amber-task")
+    }
+
+    // add back to body
+    let selector = `${projectName}-task-preview-wrap`;
+    document.getElementById(selector).appendChild(taskBox);
+}
+
 
 //**********************************************
 // create each task preview (from main project)
@@ -165,16 +211,41 @@ function createTaskPreview(taskPreviewObj, projectName) {
     // & paragraphs and add content as innerHTML
     let taskDescription = document.createElement('div');
     let description = document.createElement('p');
-    description.innerHTML = taskPreviewObj.taskDescription; //TODO ******* check
+    description.innerHTML = taskPreviewObj.taskDescription;
     taskDescription.appendChild(description);
+
+    let doneIcon = document.createElement('div');
+    let icon = document.createElement('img');
+    icon.setAttribute("src", "./images/done.png");
+    icon.setAttribute("alt", "mark done");
+    doneIcon.appendChild(icon);
+    doneIcon.setAttribute('data-task_done', taskPreviewObj.taskId);
+    doneIcon.addEventListener('click', taskCompleteClick); //TODO ** check **
+    taskDescription.appendChild(doneIcon);
 
     let taskDeadline = document.createElement('div');
     let date = document.createElement('p');
     let options = { weekday: 'short', year: '2-digit', month: 'short', day: 'numeric' };
     date.innerHTML = new Date(taskPreviewObj.taskDeadline).toLocaleDateString("en-GB", options);
     taskDeadline.appendChild(date);
+    let today = new Date();
+    let deadline = new Date(taskPreviewObj.taskDeadline);
+    const diffDays = (deadline - today)/1000/60/60/24;
+    if (diffDays <= -1) {
+        taskDeadline.classList.add("red-task")
+    }
+    if (-1 < diffDays && diffDays < 1) {
+        taskDeadline.classList.add("amber-task")
+    }
 
     let taskOwner = document.createElement('div');
+    let taskOwnerPhoto = document.createElement('div');
+    let img = document.createElement('img');
+    img.setAttribute("src", taskPreviewObj.profilePicUrl);
+    img.setAttribute("alt", "profile photo");
+    taskOwnerPhoto.appendChild(img);
+    taskOwner.appendChild(taskOwnerPhoto);
+
     let owner = document.createElement('p');
     owner.innerHTML = taskPreviewObj.taskOwner;
     taskOwner.appendChild(owner);
@@ -184,8 +255,14 @@ function createTaskPreview(taskPreviewObj, projectName) {
     priority.innerHTML = taskPreviewObj.taskPriority;
     taskPriority.appendChild(priority);
 
+    // create wrap for description and deadline
+    let topWrap = document.createElement('div');
+    topWrap.appendChild(taskDescription);
+    topWrap.appendChild(taskDeadline);
+
     // create wrap for name and priority
     let bottomWrap = document.createElement('div');
+//    bottomWrap.appendChild(taskOwnerPhoto);
     bottomWrap.appendChild(taskOwner);
     bottomWrap.appendChild(taskPriority);
 
@@ -193,51 +270,67 @@ function createTaskPreview(taskPreviewObj, projectName) {
     taskPreviewBox.classList.add("task-preview-box");
     taskDescription.classList.add("task-description");
     taskDeadline.classList.add("deadline");
+    taskOwnerPhoto.classList.add("img-wrap");
+    doneIcon.classList.add("icon-wrap");
     taskOwner.classList.add("task-owner");
+    taskPriority.classList.add("task-priority")
+    topWrap.classList.add("top-task-preview-wrap");
     bottomWrap.classList.add("bottom-task-preview-wrap");
-    // set an attribute (to identify that specific task for a click listener [next])
-    taskPreviewBox.setAttribute('data-task_id', taskPreviewObj.taskId);
-    taskPreviewBox.addEventListener('click', taskPreviewClick);
-    // also add the attribute to all children // TODO is this needed on every element??
-    taskDescription.setAttribute('data-task_id', taskPreviewObj.taskId);
-    taskDeadline.setAttribute('data-task_id', taskPreviewObj.taskId);
-    taskOwner.setAttribute('data-task_id', taskPreviewObj.taskId);
-    taskPriority.setAttribute('data-task_id', taskPreviewObj.taskId);
+    // set an attribute called data-task_id with the value of the taskId for that specific task
+    // this is used for a click listener [next]) // TODO is this needed on every element??
+//    taskPreviewBox.setAttribute('data-task_id', taskPreviewObj.taskId);
+//    topWrap.setAttribute('data-task_id', taskPreviewObj.taskId);
+    bottomWrap.setAttribute('data-task_id', taskPreviewObj.taskId);
+//    taskPreviewBox.addEventListener('click', taskPreviewClick);
 
-    //append all children to parent div
-    taskPreviewBox.appendChild(taskDeadline);
-    taskPreviewBox.appendChild(taskDescription);
+    //append sections to parent div
+    taskPreviewBox.appendChild(topWrap);
     taskPreviewBox.appendChild(bottomWrap);
     // add back to body
     let selector = `${projectName}-task-preview-wrap`;
-    console.log(selector);
     document.getElementById(selector).appendChild(taskPreviewBox);
 }
 
 //************************************************************
-// click listener that listens for a click on each taskPreview
+// TODO click listener for a click on each taskPreview
 //************************************************************
 // and then creates opens a task pane for the task_id clicked
-function taskPreviewClick(event) {
-    let taskId = event.target.dataset.task_id; // assign 'chatId' to the data attribute 'chat_id' that we assigned (in createTaskPreview)
-    // to the various elements of the preview box (these are the targets of the click event) - each of which holds the corresponding
-    // chat ids for each preview
-    fetch(`/tasks/${taskId}`)
-    .then(res => res.json())
-    .then(resObj => {
-        // to only get the chat messages relevant to this chat in the chatBubble wrapper, reset the innerHTML to null every time
-        document.getElementById('project-summary-wrapper').innerHTML = "";
-        document.getElementById("send-message").dataset.chat_id = chatId;
-        resObj.data.forEach(chatBubbleObj => {
-            createChatBubble(chatBubbleObj)
-        })
-    })
-    // only allow form input after clicking on a chatPreview
-    document.getElementById("new-message").removeAttribute("disabled");
+//function taskPreviewClick(event) {
+//    let taskId = event.target.dataset.task_id; // 'task_id' is the data attribute we assigned in createTaskPreview
+//    // to the various elements of the preview box (these are the targets of the click event) - each data attribute
+//    // holds the corresponding task ids of each preview
+//    fetch(`/tasks/${taskId}`)
+//    .then(res => res.json())
+//    .then(resObj => {
+//        // to only get the chat messages relevant to this chat in the chatBubble wrapper, reset the innerHTML to null every time
+//        document.getElementById('project-summary-wrapper').innerHTML = "";
+//        document.getElementById("send-message").dataset.chat_id = taskId;
+//        resObj.data.forEach(chatBubbleObj => {
+//            createChatBubble(chatBubbleObj)
+//        })
+//    })
+//    // only allow form input after clicking on a chatPreview
+//    document.getElementById("new-message").removeAttribute("disabled");
+//
+//    // change chat Pic to match chat clicked on: find the closest 'individual-msg-preview-box' element to the event target
+//    // and set the src attribute of chat-photo>img to the src of that closest element
+//    document.querySelector("#chat-photo > img").setAttribute("src", event.target.closest('.individual-msg-preview-box').querySelector('img').src);
+//}
 
+//************************************************************
+// click listener for a click on each task's 'done' button
+//************************************************************
+// and then creates opens a task pane for the task_id clicked
+function taskCompleteClick(event) {
+    let taskId = event.currentTarget.dataset.task_done; // 'task_done' is the data attribute assigned to the done icon and
+    // holds the taskId
+
+    fetch(`/tasks/${taskId}/complete`)
+        .then(res => res.json());
+    location.reload();
     // change chat Pic to match chat clicked on: find the closest 'individual-msg-preview-box' element to the event target
     // and set the src attribute of chat-photo>img to the src of that closest element
-    document.querySelector("#chat-photo > img").setAttribute("src", event.target.closest('.individual-msg-preview-box').querySelector('img').src);
+//    document.querySelector("#chat-photo > img").setAttribute("src", event.target.closest('.individual-msg-preview-box').querySelector('img').src);
 }
 
 //************************************************************
@@ -335,7 +428,7 @@ function populateAddStakeholderDropDown(remainingUsers) {
     addProjectStakeholderModalBody.innerHTML = "";
     addProjectStakeholderModalBody.appendChild(form);
 }
-//TODO ********** check this **************
+//TODO ********** update this **************
 function newStakeholderSubmit(e){
     e.preventDefault()
     let options = document.getElementById('users-list').options;
@@ -351,9 +444,6 @@ function newStakeholderSubmit(e){
             duoUserId = option.getAttribute('data-value');
         }
     })
-    console.log(chatName)
-    console.log(userId)
-    console.log(duoUserId)
 
     let postData = {
         "chatName": chatName,
@@ -373,63 +463,4 @@ function newStakeholderSubmit(e){
         fetch(`/chats/${userId}/${duoUserId}`, postParams)
              .then(res => res.json())
 }
-
-
-//*************************************
-// create each project summary on the right
-//*************************************
-// create a createProjectSummaryBox object
-// then:
-    // 1) create divs (projectSummaryBox parent and all children within it)
-    // 2) add relevant classes
-    // 3) add data attribute
-    // 4) append p to projectSummary div
-    // 5) append the content divs to the projectSummaryBox div
-const createProjectSummaryBox = (projectSummary) => {
-    let userId = document.getElementById('user_id').value;
-    // create parent and add event listener
-    let projectSummaryBox = document.createElement('div');
-    projectSummaryBox.addEventListener('click', projectPreviewClick);
-    // create children divs & paragraphs and then add content as innerHTML
-    let projectName = document.createElement('div');
-    let name = document.createElement('p');
-    name.innerHTML = projectSummary.projectName; //TODO ******* check
-
-    let projectWarning = document.createElement('div');
-    let warning = document.createElement('p');
-    warning.innerHTML = projectSummary.warning; //TODO ******* check
-
-    let projectRecentActivity = document.createElement('div');
-    let recentActivity = document.createElement('p');
-    recentActivity.innerHTML = projectSummary.recentActivity; //TODO ******* check
-
-    let projectTasks = document.createElement('div');
-    let tasks = document.createElement('p');
-    // TODO need to loop through and pull each task
-    tasks.innerHTML = projectSummary.tasks;
-
-    // add classes
-    projectSummary.classList.add("project-summary");
-    projectName.classList.add("project-name");
-    projectWarning.classList.add("project-warning");
-    projectRecentActivity.classList.add("project-recent-activity");
-    projectTasks.classList.add("project-tasks");
-    // add project_id attribute
-    projectSummary.setAttribute('data-project_id', taskPreviewObj.taskId);
-    projectName.setAttribute('data-project_id', taskPreviewObj.taskId);
-    projectWarning.setAttribute('data-project_id', taskPreviewObj.taskId);
-    projectRecentActivity.setAttribute('data-project_id', taskPreviewObj.taskId);
-    projectTasks.setAttribute('data-project_id', taskPreviewObj.taskId);
-    // append children to parent
-    projectSummaryBox.appendChild(name);
-    projectSummaryBox.appendChild(warning);
-    projectSummaryBox.appendChild(recentActivity);
-    projectSummaryBox.appendChild(tasks);
-    document.getElementById('project-summary-wrapper').append(projectSummaryBox);
-}
-
-
-
-
-
 
