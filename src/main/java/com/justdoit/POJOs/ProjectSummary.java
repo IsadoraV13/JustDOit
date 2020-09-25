@@ -4,12 +4,21 @@ import java.util.Date;
 import java.util.List;
 
 public class ProjectSummary {
+    private int projectId;
     private String projectName;
     private Date projectDeadline;
     private String imminentDeadlineWarning;
     private String passedDeadlineWarning;
     private String recentActivity; // will need a method to pull together text
     private List<TaskPreview> taskPreviews;
+
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
+    }
 
     public String getProjectName() {
         return projectName;

@@ -51,6 +51,28 @@ public class TaskService {
     public List<TaskPreview> listTaskPreviews(int projectId, int userId) {
         User user = userService.listByUserId(userId);
         List<TaskPreview> taskPreviews = new ArrayList<>();
+        List<Task> tasks = new ArrayList<>();
+        if (listTaskByProjectId(projectId) != null) {
+            tasks = listTaskByProjectId(projectId);
+            for (Task task : tasks) {
+            // for each task, create a new TaskPreview object and set its attributes based on that task
+            TaskPreview tp = new TaskPreview();
+            tp.setTaskId(task.getTaskId());
+            tp.setTaskDescription(task.getTaskDescription());
+            tp.setTaskDeadline(task.getTaskDeadline());
+            tp.setTaskOwner(taskRepo.findTaskOwnerNameByTaskOwnerUserId(task.getTaskOwnerUserId()));
+            tp.setTaskPriority(task.getTaskPriority());
+            tp.setProfilePicUrl(userService.listByUserId(task.getTaskOwnerUserId()).getProfilePicUrl());
+            tp.setIsComplete(task.getIsComplete());
+            taskPreviews.add(tp);
+            }
+        }
+        return taskPreviews;
+    }
+
+    public List<TaskPreview> listCompletedTaskPreviews(int projectId, int userId) {
+        User user = userService.listByUserId(userId);
+        List<TaskPreview> taskPreviews = new ArrayList<>();
         List<Task> tasks = listTaskByProjectId(projectId);
         for (Task task : tasks) {
             // for each task, create a new TaskPreview object and set its attributes based on that task

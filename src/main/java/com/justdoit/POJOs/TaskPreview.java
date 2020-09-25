@@ -9,6 +9,7 @@ public class TaskPreview {
     private Date taskDeadline;
     private String taskPriority;
     private String profilePicUrl;
+    private Boolean isComplete;
 
     public String getTaskDescription() {
         return taskDescription;
@@ -56,5 +57,13 @@ public class TaskPreview {
 
     public void setProfilePicUrl(String profilePicUrl) {
         this.profilePicUrl = profilePicUrl;
+    }
+
+    public Boolean getIsComplete() {
+        return isComplete;
+    }
+
+    public void setIsComplete(Boolean complete) {
+        isComplete = complete;
     }
 }

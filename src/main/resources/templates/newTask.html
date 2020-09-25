@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<meta>
+    <meta charset="UTF-8" />
+    <title>New task</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+          crossorigin="anonymous">
+</head>
+<body>
+    <form th:fragment="newTask" method="POST" class="create-task">
+        <h4 class="create-task-heading" th:text="Welcome"></h4>
+        <input type="text" id="taskDescription" name="taskDescription"  th:placeholder="What needs to be done?"
+               class="form-control" /> <br/>
+        <input type="text" id="taskOwnerName" name="taskOwnerName"  th:placeholder="Who owns this task?"
+               class="form-control" /> <br/>
+        <input type="date"  th:placeholder="Task deadline"
+               id="taskDeadline" name="taskDeadline" th:placeholder="By when must it be done?"
+               class="form-control" /> <br/>
+        <input type="text" id="dependsOn" name="dependsOn"
+               th:placeholder="If this task depends on another one being completed first, please select the other task from the drop down"
+               class="form-control" /> <br/>
+        <input type="text" id="isDependedOnBy" name="isDependedOnB"
+               th:placeholder="If there is another task that depends on this one being completed first, please select it from the drop down"
+               class="form-control" /> <br/>
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="taskAddedNotificationOn">
+            <label class="custom-control-label" for="taskAddedNotificationOn">Receive a notification every time a task is added</label>
+        </div>
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="taskCompleteNotificationOn;">
+            <label class="custom-control-label" for="taskCompleteNotificationOn;">Receive a notification every time a task is marked complete</label>
+        </div>
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="taskDeadlineNotificationOn">
+            <label class="custom-control-label" for="taskDeadlineNotificationOn">Receive a notification every time a task misses a deadline</label>
+        </div>
+        <div align="center" th:if="${param.error}">
+            <p style="font-size: 20; color: #FF1C19;">Email or Password invalid, please verify</p>
+        </div>
+        <button class="btn " name="Submit" value="CreateTask" type="Submit" th:text="Create task"></button>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+</body>
+</html>

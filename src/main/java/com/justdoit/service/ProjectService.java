@@ -87,9 +87,10 @@ public class ProjectService {
         List<ProjectSummary> projectSummaries = new ArrayList<>();
         for (Integer projectId : projectIds) {
             // for each non-Main projectId, find the project
-            // & create a new ProjectSummary object and set its attributes based on that project
+            // & create a new ProjectSummary object and set its attributes to those of that project
             Project project = projectRepo.findOne(projectId);
             ProjectSummary ps = new ProjectSummary();
+            ps.setProjectId(project.getProjectId());
             ps.setProjectName(project.getProjectName());
             ps.setProjectDeadline(project.getProjectDeadline());
             List<Integer> warnings = listImminentTaskDeadlineWarning(projectId);

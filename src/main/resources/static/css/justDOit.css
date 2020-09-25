@@ -54,7 +54,7 @@ header {
 }
 
 .main-horizontal-content {
-  width: 100%;
+  width: 100vw;
   height: calc(100% - 75px);
   border: 2px solid black;
   display: flex;
@@ -84,7 +84,19 @@ header {
   overflow-y: scroll;
 }
 
-.task-preview-wrap {
+.add-task-wrap > img {
+   width: 35px;
+   height: 35px;
+   padding-left: 10px;
+   padding-top: 5px;
+   opacity: 0.3;
+}
+
+.add-task-wrap > img:hover {
+  opacity: 1.0;
+}
+
+.task-wrap {
     background-color:inherit;
     flex-grow: 10;
     padding: 20px;
@@ -120,15 +132,6 @@ header {
     justify-content: space-between;
 }
 
-.task-description {
-    font-size: large;
-}
-
-.deadline {
-    white-space: nowrap;
-    font-weight: bold;
-}
-
 .top-task-preview-wrap {
     width: 100%;
     display: flex;
@@ -154,6 +157,31 @@ header {
 }
 
 .task-description {
+    font-size: large;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.description {
+    font-size: large;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 500px;
+    white-space: normal;
+}
+
+.span {
+    display: in-line;
+    white-space: normal;
+}
+
+.deadline {
+    white-space: nowrap;
+    font-weight: bold;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -181,6 +209,13 @@ header {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+}
+
+.title-wrap {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .top-project-summary-wrap {
@@ -236,7 +271,6 @@ input[name="message"] {
 .smaller-icon-wrap > img {
   width: 20px;
   height: 20px;
-
   margin-top: 2px;
   margin-right: 5px;
 }
@@ -270,13 +304,24 @@ input[name="message"] {
   padding-right: 5px;
 }
 
-.icon-wrap > img {
-  width: 40px;
-  height: 40px;
+.done-icon-wrap > img {
+  width: 35px;
+  height: 35px;
   opacity: 0.3;
 }
 
-.icon-wrap > img:hover {
+.done-icon-wrap > img:hover {
+  opacity: 1.0;
+}
+
+.edit-icon-wrap > img {
+  width: 21px;
+  height: 21px;
+  margin-right: 5px;
+  opacity: 0.3;
+}
+
+.edit-icon-wrap > img:hover {
   opacity: 1.0;
 }
 

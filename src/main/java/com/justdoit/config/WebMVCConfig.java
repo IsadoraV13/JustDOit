@@ -31,5 +31,4 @@ public class WebMVCConfig extends WebMvcConfigurerAdapter {
         return factoryBean.getObject();
     }
 
-    // TODO: Isadora to get sqlSessionFactory bean here
 }
